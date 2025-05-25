@@ -20,7 +20,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               {children}
             </main>
 
-            <div style={{ padding: 24 }}>
+            <div style={{ padding: 2 }}>
               <JavaCompiler height="700px" />
             </div>
 
