@@ -25,28 +25,18 @@ const JavaCompiler: React.FC<CompilerProps> = ({
         bodyStyle={{ padding: 0 }}
         style={{ borderRadius: "8px", overflow: "hidden" }}
       >
-        <div
+        <iframe
+          src="https://www.jdoodle.com/online-java-compiler"
+          title="Java Compiler"
           style={{
-            position: "relative",
-            paddingTop: "56.25%", // 16:9 aspect ratio
-            height: 0,
-            overflow: "hidden",
+            width: "100%",
+            height: typeof height === "string" ? height : `${height}px`,
+            border: "none",
+            borderRadius: "8px",
           }}
-        >
-          <iframe
-            src="https://www.jdoodle.com/online-java-compiler"
-            title="Java Compiler"
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: "100%",
-              border: "none",
-            }}
-            allowFullScreen
-          ></iframe>
-        </div>
+          allow="clipboard-write; clipboard-read"
+          allowFullScreen
+        ></iframe>
       </Card>
     </div>
   );
