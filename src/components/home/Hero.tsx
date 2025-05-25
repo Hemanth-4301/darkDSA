@@ -1,6 +1,7 @@
 import React from "react";
 import { BrainCircuit, ArrowRight, Sparkles, LineChart } from "lucide-react";
 import { useProgress } from "../../context/ProgressContext";
+import "./App.css";
 
 const Hero: React.FC = () => {
   const { getSolvedCount } = useProgress();
@@ -28,21 +29,13 @@ const Hero: React.FC = () => {
                 interviews with our curated collection of 140+ essential
                 problems.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 mb-12">
+              <div className="flex flex-col sm:flex-row gap-8 mb-12">
                 <a
                   href="#categories"
                   className="inline-flex items-center justify-center px-6 py-3 text-base font-medium rounded-lg text-white bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-700 hover:to-secondary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 shadow-lg transform transition-all duration-200 hover:scale-105"
                 >
                   Start Learning
                   <ArrowRight className="ml-2 h-5 w-5" />
-                </a>
-                <a
-                  href="https://neetcode.io"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center px-6 py-3 border-2 border-primary-200 dark:border-primary-800 text-base font-medium rounded-lg text-primary-700 dark:text-primary-300 bg-transparent hover:bg-primary-50 dark:hover:bg-primary-900/30 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200"
-                >
-                  Visit NeetCode
                 </a>
               </div>
 
@@ -82,7 +75,10 @@ const Hero: React.FC = () => {
             <div className="flex-shrink-0 relative">
               <div className="relative w-48 h-48 md:w-64 md:h-64 animate-float">
                 <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary-100 to-secondary-100 dark:from-primary-900 dark:to-secondary-900 flex items-center justify-center p-8">
-                  <BrainCircuit className="w-16 h-16 mb-20 text-primary-600 dark:text-primary-400" />
+                  {/* <BrainCircuit className="w-16 h-16 mb-20 text-primary-600 dark:text-primary-400" /> */}
+                  <div class="bar">
+                    <div class="ball"></div>
+                  </div>
                 </div>
                 <svg
                   className="absolute inset-0 w-full h-full"
@@ -119,7 +115,7 @@ const Hero: React.FC = () => {
                     />
                   </circle>
                 </svg>
-                <div className="absolute inset-0 flex items-center justify-center mt-20">
+                <div className="absolute inset-0 flex items-center justify-center mt-28">
                   <div className="text-center">
                     <span className="block text-3xl md:text-4xl font-bold text-primary-700 dark:text-primary-300">
                       {totalSolved}

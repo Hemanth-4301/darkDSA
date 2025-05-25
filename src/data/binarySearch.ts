@@ -2,11 +2,10 @@ import { Question } from "../types";
 
 export const binarySearchQuestions: Question[] = [
   {
-    id: "binary-search",
+    id:31
     title: "Binary Search",
     description: "Given an array of integers nums which is sorted in ascending order, and an integer target, write a function to search target in nums. If target exists, then return its index. Otherwise, return -1.\n\nYou must write an algorithm with O(log n) runtime complexity.",
     difficulty: "Easy",
-    tags: ["Array", "Binary Search"],
     examples: [
       {
         input: "nums = [-1,0,3,5,9,12], target = 9",
@@ -63,11 +62,10 @@ export const binarySearchQuestions: Question[] = [
     leetcodeUrl: "https://leetcode.com/problems/binary-search/"
   },
   {
-    id: "search-a-2d-matrix",
+    id:31
     title: "Search a 2D Matrix",
     description: "Write an efficient algorithm that searches for a value target in an m x n integer matrix matrix. This matrix has the following properties:\n\n- Integers in each row are sorted from left to right.\n- The first integer of each row is greater than the last integer of the previous row.",
     difficulty: "Medium",
-    tags: ["Array", "Binary Search", "Matrix"],
     examples: [
       {
         input: "matrix = [[1,4,7,11],[2,5,8,12],[3,6,9,16]], target = 5",
@@ -128,11 +126,10 @@ export const binarySearchQuestions: Question[] = [
     leetcodeUrl: "https://leetcode.com/problems/search-a-2d-matrix/"
   },
   {
-    id: "koko-eating-bananas",
+    id:31
     title: "Koko Eating Bananas",
     description: "Koko loves to eat bananas. There are n piles of bananas, the ith pile has piles[i] bananas. The guards have gone and will come back in h hours.\n\nKoko can decide her bananas-per-hour eating speed of k. Each hour, she chooses some pile of bananas and eats k bananas from that pile. If the pile has less than k bananas, she eats all of them for that hour and will not eat any more bananas during that hour.\n\nKoko likes to eat slowly but wants to finish eating all the bananas before the guards come back.\n\nReturn the minimum integer k such that she can eat all the bananas within h hours.",
     difficulty: "Medium",
-    tags: ["Array", "Binary Search"],
     examples: [
       {
         input: "piles = [3,6,7,11], h = 8",
@@ -205,11 +202,10 @@ export const binarySearchQuestions: Question[] = [
     leetcodeUrl: "https://leetcode.com/problems/koko-eating-bananas/"
   },
   {
-    id: "find-minimum-in-rotated-sorted-array-binary",
+    id:31
     title: "Find Minimum in Rotated Sorted Array",
     description: "Suppose an array of length n sorted in ascending order is rotated between 1 and n times. For example, the array nums = [0,1,2,4,5,6,7] might become:\n\n[4,5,6,7,0,1,2] if it was rotated 4 times.\n[0,1,2,4,5,6,7] if it was rotated 7 times.\n\nGiven the rotated sorted array nums of unique elements, return the minimum element of this array.\n\nYou must write an algorithm that runs in O(log n) time.",
     difficulty: "Medium",
-    tags: ["Array", "Binary Search"],
     examples: [
       {
         input: "nums = [3,4,5,1,2]",
@@ -265,11 +261,10 @@ export const binarySearchQuestions: Question[] = [
     leetcodeUrl: "https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/"
   },
   {
-    id: "search-in-rotated-sorted-array-binary",
+    id:31
     title: "Search in Rotated Sorted Array",
     description: "There is an integer array nums sorted in ascending order (with distinct values).\n\nPrior to being passed to your function, nums is possibly rotated at an unknown pivot index k (1 <= k < nums.length) such that the resulting array is [nums[k], nums[k+1], ..., nums[n-1], nums[0], nums[1], ..., nums[k-1]] (0-indexed). For example, [0,1,2,4,5,6,7] might be rotated at pivot index 3 and become [4,5,6,7,0,1,2].\n\nGiven the array nums after the possible rotation and an integer target, return the index of target if it is in nums, or -1 if it is not in nums.\n\nYou must write an algorithm with O(log n) runtime complexity.",
     difficulty: "Medium",
-    tags: ["Array", "Binary Search"],
     examples: [
       {
         input: "nums = [4,5,6,7,0,1,2], target = 0",
@@ -337,11 +332,10 @@ export const binarySearchQuestions: Question[] = [
     leetcodeUrl: "https://leetcode.com/problems/search-in-rotated-sorted-array/"
   },
   {
-    id: "time-based-key-value-store",
+    id:31
     title: "Time Based Key-Value Store",
     description: "Design a time-based key-value data structure that can store multiple values for the same key at different time stamps and retrieve the key's value at a certain timestamp.\n\nImplement the TimeMap class:\n\n- TimeMap() Initializes the object of the data structure.\n- void set(String key, String value, int timestamp) Stores the key key with the value value at the given time timestamp.\n- String get(String key, int timestamp) Returns a value such that set was called previously, with timestamp_prev <= timestamp. If there are multiple such values, it returns the value associated with the largest timestamp_prev. If there are no values, it returns \"\".",
     difficulty: "Medium",
-    tags: ["Hash Table", "String", "Binary Search", "Design"],
     examples: [
       {
         input: '["TimeMap", "set", "get", "get", "set", "get", "get"]\n[[], ["foo", "bar", 1], ["foo", 1], ["foo", 3], ["foo", "bar2", 4], ["foo", 4], ["foo", 5]]',
@@ -451,11 +445,10 @@ export const binarySearchQuestions: Question[] = [
     leetcodeUrl: "https://leetcode.com/problems/time-based-key-value-store/"
   },
   {
-    id: "median-of-two-sorted-arrays",
+    id:31
     title: "Median of Two Sorted Arrays",
     description: "Given two sorted arrays nums1 and nums2 of size m and n respectively, return the median of the two sorted arrays.\n\nThe overall run time complexity should be O(log (m+n)).",
     difficulty: "Hard",
-    tags: ["Array", "Binary Search", "Divide and Conquer"],
     examples: [
       {
         input: "nums1 = [1,3], nums2 = [2]",
