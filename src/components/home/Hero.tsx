@@ -76,8 +76,8 @@ const Hero: React.FC = () => {
               <div className="relative w-48 h-48 md:w-64 md:h-64 animate-float">
                 <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary-100 to-secondary-100 dark:from-primary-900 dark:to-secondary-900 flex items-center justify-center p-8">
                   {/* <BrainCircuit className="w-16 h-16 mb-20 text-primary-600 dark:text-primary-400" /> */}
-                  <div class="bar">
-                    <div class="ball"></div>
+                  <div className="bar">
+                    <div className="ball"></div>
                   </div>
                 </div>
                 <svg
@@ -115,7 +115,7 @@ const Hero: React.FC = () => {
                     />
                   </circle>
                 </svg>
-                <div className="absolute inset-0 flex items-center justify-center mt-28">
+                <div className="absolute inset-0 flex items-center justify-center mt-24">
                   <div className="text-center">
                     <span className="block text-3xl md:text-4xl font-bold text-primary-700 dark:text-primary-300">
                       {totalSolved}
