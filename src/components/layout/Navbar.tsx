@@ -22,14 +22,14 @@ const Navbar: React.FC = () => {
               </span>
             </Link>
 
-            {location.pathname !== "/" && (
+            {/* {location.pathname !== "/" && (
               <Link
                 to="/"
                 className="ml-6 text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400"
               >
                 Categories
               </Link>
-            )}
+            )} */}
           </div>
 
           <div className="flex items-center space-x-4">
