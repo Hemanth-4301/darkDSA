@@ -17,6 +17,7 @@ const JavaCompiler: React.FC<CompilerProps> = ({
         maxWidth: "1000px",
         margin: "0 auto",
         padding: "10px",
+        paddingBottom: "40px",
         boxSizing: "border-box",
       }}
     >
