@@ -4,8 +4,7 @@ import Layout from "./components/layout/Layout";
 import HomePage from "./pages/HomePage";
 import CategoryPage from "./pages/CategoryPage";
 import QuestionPage from "./pages/QuestionPage";
-import JavaCompiler from "./components/layout/Compiler";
-
+import Chatbot from "./components/layout/Chatbot";
 function App() {
   return (
     <Router>
@@ -17,8 +16,9 @@ function App() {
             path="/category/:categoryId/question/:questionId"
             element={<QuestionPage />}
           />
-          <Route path="/compiler" element={<JavaCompiler />} />
+          <Route path="/chatbot" element={<Chatbot/>} />
         </Routes>
+
       </Layout>
     </Router>
   );

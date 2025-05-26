@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Code2, Moon, Sun, Menu, X } from "lucide-react";
 import { useTheme } from "../../context/ThemeContext";
 import { useProgress } from "../../context/ProgressContext";
+import Chatbot from "./Chatbot";
 
 const Navbar: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
@@ -17,7 +18,11 @@ const Navbar: React.FC = () => {
 
   const navLinks = [
     { to: "/", text: "Home", show: location.pathname !== "/" },
-    { to: "/compiler", text: "Compiler", show: true },
+    {
+      to: "/chatbot",
+      text: "Chatbot",
+      show: location.pathname !== "/chatbot",
+    },
   ];
 
   return (

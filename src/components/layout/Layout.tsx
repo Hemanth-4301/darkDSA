@@ -4,12 +4,15 @@ import { ThemeProvider } from "../../context/ThemeContext";
 import { ProgressProvider } from "../../context/ProgressContext";
 import { FilterProvider } from "../../context/FilterContext";
 import JavaCompiler from "./Compiler";
+import { Link, useLocation } from "react-router-dom";
+import Chatbot from "./Chatbot";
 
 interface LayoutProps {
   children: React.ReactNode;
 }
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
+  const location = useLocation();
   return (
     <ThemeProvider>
       <ProgressProvider>
@@ -19,10 +22,12 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             <main className="flex-grow container mx-auto px-4 py-8">
               {children}
             </main>
-{/* 
-            <div style={{ padding: 2 }}>
-              <JavaCompiler height="700px" />
-            </div> */}
+
+            {location.pathname != "/chatbot" && (
+              <div className="p-20">
+                <Chatbot />
+              </div>
+            )}
 
             <footer className="py-6 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
               <div className="container mx-auto px-4 text-center text-gray-600 dark:text-gray-400 text-sm">
