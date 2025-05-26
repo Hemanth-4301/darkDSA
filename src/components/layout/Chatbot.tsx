@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { marked } from "marked";
 import hljs from "highlight.js";
-import "highlight.js/styles/github-dark.css"; // Or choose a light theme
+import "highlight.js/styles/github.css";
 import {
   Copy,
   Send,
@@ -12,7 +12,6 @@ import {
   VolumeX,
   Mic,
 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
 
 // Configure marked to use highlight.js for code blocks
 marked.setOptions({
@@ -43,21 +42,6 @@ const Chatbot: React.FC = () => {
   const speechSynthesis = window.speechSynthesis;
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
   const recognitionRef = useRef<any>(null);
-
-  // Glass morphism styles
-  const glassStyle = {
-    background: "rgba(255, 255, 255, 0.15)",
-    backdropFilter: "blur(12px)",
-    border: "1px solid rgba(255, 255, 255, 0.18)",
-    boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.15)",
-  };
-
-  const darkGlassStyle = {
-    background: "rgba(15, 15, 25, 0.7)",
-    backdropFilter: "blur(12px)",
-    border: "1px solid rgba(255, 255, 255, 0.08)",
-    boxShadow: "0 8px 32px 0 rgba(0, 0, 0, 0.3)",
-  };
 
   // Initialize speech recognition
   useEffect(() => {
@@ -210,11 +194,10 @@ const Chatbot: React.FC = () => {
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
-    // Toast notification would be better here
     const toast = document.createElement("div");
     toast.textContent = "Copied to clipboard!";
     toast.className =
-      "fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-fade-in-out";
+      "fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50";
     document.body.appendChild(toast);
     setTimeout(() => toast.remove(), 2000);
   };
@@ -319,7 +302,7 @@ const Chatbot: React.FC = () => {
 
             return (
               <div key={index} className="relative my-2">
-                <div className="flex justify-between items-center bg-gray-800/90 text-gray-300 px-3 py-1 text-xs rounded-t-lg">
+                <div className="flex justify-between items-center bg-gray-800 text-gray-300 px-3 py-1 text-xs rounded-t-lg">
                   <span>{block.language || "code"}</span>
                   <button
                     onClick={() => copyToClipboard(block.content)}
@@ -329,7 +312,7 @@ const Chatbot: React.FC = () => {
                     Copy
                   </button>
                 </div>
-                <pre className="m-0 rounded-b-lg rounded-t-none">
+                <pre className="m-0 p-2 bg-gray-900 rounded-b-lg overflow-x-auto">
                   <code
                     className={`hljs language-${block.language}`}
                     dangerouslySetInnerHTML={{ __html: highlightedCode }}
@@ -344,7 +327,7 @@ const Chatbot: React.FC = () => {
             <div
               key={index}
               dangerouslySetInnerHTML={{ __html: html }}
-              className="my-1"
+              className="my-1 break-words"
             />
           );
         })}
@@ -357,125 +340,69 @@ const Chatbot: React.FC = () => {
   };
 
   return (
-    <div
-      className="flex flex-col h-full rounded-2xl overflow-hidden relative"
-      style={{
-        background:
-          "linear-gradient(135deg, rgba(200,210,255,0.2) 0%, rgba(220,230,255,0.1) 100%)",
-        ...glassStyle,
-      }}
-    >
-      {/* Background decorative elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 left-0 w-64 h-64 bg-blue-400/10 rounded-full filter blur-3xl"></div>
-        <div className="absolute bottom-0 right-0 w-64 h-64 bg-purple-400/10 rounded-full filter blur-3xl"></div>
-      </div>
-
+    <div className="flex flex-col h-full bg-gray-100 dark:bg-gray-900 rounded-lg overflow-hidden">
       {/* Chat area */}
-      <div className="flex-1 overflow-y-auto p-6 space-y-6 relative z-10">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {messages.length === 0 ? (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="flex flex-col items-center justify-center h-full text-gray-600 dark:text-gray-300"
-          >
-            <motion.div
-              animate={{
-                y: [0, -10, 0],
-                rotate: [0, 5, -5, 0],
-              }}
-              transition={{
-                duration: 4,
-                repeat: Infinity,
-                repeatType: "reverse",
-              }}
-              className="w-24 h-24 mb-6 flex items-center justify-center"
-              style={{
-                background: "rgba(255,255,255,0.2)",
-                backdropFilter: "blur(10px)",
-                border: "1px solid rgba(255,255,255,0.3)",
-                borderRadius: "50%",
-              }}
-            >
-              <Bot className="w-12 h-12 text-blue-500" />
-            </motion.div>
-            <h3 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">
+          <div className="flex flex-col items-center justify-center h-full text-gray-600 dark:text-gray-300 p-4">
+            <div className="w-20 h-20 mb-6 flex items-center justify-center bg-white dark:bg-gray-800 rounded-full shadow-md">
+              <Bot className="w-10 h-10 text-blue-500" />
+            </div>
+            <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-2 text-center">
               How can I help you today?
             </h3>
-            <p className="text-center max-w-md text-gray-600 dark:text-gray-300 mb-8">
+            <p className="text-center max-w-md text-gray-600 dark:text-gray-300 mb-6">
               Ask me anything about coding, algorithms, or tech. I can explain
               concepts, help debug code, or suggest solutions.
             </p>
-            <div className="grid grid-cols-2 gap-4 w-full max-w-md">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-md">
               {[
                 "What's the optimal solution for the 3Sum problem in Java?",
                 "Explain React hooks with examples",
                 "Python best practices for clean code",
                 "How to optimize SQL queries?",
               ].map((prompt, i) => (
-                <motion.div
+                <div
                   key={i}
-                  whileHover={{ y: -4, scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="p-4 rounded-xl cursor-pointer transition-all"
-                  style={{
-                    background: "rgba(255,255,255,0.25)",
-                    backdropFilter: "blur(8px)",
-                    border: "1px solid rgba(255,255,255,0.3)",
-                  }}
+                  className="p-3 rounded-lg cursor-pointer bg-white dark:bg-gray-800 shadow-sm hover:shadow-md transition-shadow"
                   onClick={() => setInput(prompt)}
                 >
                   <p className="text-sm font-medium text-gray-800 dark:text-gray-200">
                     {prompt.split("?")[0].substring(0, 30)}...
                   </p>
-                </motion.div>
+                </div>
               ))}
             </div>
-          </motion.div>
+          </div>
         ) : (
-          <AnimatePresence>
+          <>
             {messages.map((message) => (
-              <motion.div
+              <div
                 key={message.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, type: "spring", stiffness: 100 }}
                 className={`flex ${
                   message.role === "user" ? "justify-end" : "justify-start"
                 }`}
               >
-                {/* REMOVED HOVER EFFECT */}
                 <div
-                  className={`max-w-3xl rounded-2xl px-5 py-4 relative group ${
+                  className={`max-w-full md:max-w-3xl rounded-lg px-4 py-3 ${
                     message.role === "user"
-                      ? "bg-gradient-to-br from-blue-500 to-blue-600 text-white"
-                      : "text-gray-800 dark:text-gray-200"
-                  }`}
-                  style={
-                    message.role === "user"
-                      ? {
-                          boxShadow: "0 4px 20px rgba(59, 130, 246, 0.3)",
-                        }
-                      : {
-                          ...darkGlassStyle,
-                          boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)",
-                        }
-                  }
+                      ? "bg-blue-500 text-white"
+                      : "bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200"
+                  } shadow-sm`}
                 >
-                  <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center justify-between mb-1">
                     <div className="flex items-center gap-2">
                       {message.role === "user" ? (
-                        <User className="w-5 h-5" />
+                        <User className="w-4 h-4" />
                       ) : (
-                        <Bot className="w-5 h-5 text-blue-400" />
+                        <Bot className="w-4 h-4 text-blue-400" />
                       )}
                       <span className="text-sm font-medium">
                         {message.role === "user" ? "You" : "Gemini"}
                       </span>
                     </div>
-                    <div className="flex items-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <span className="text-xs text-gray-300 dark:text-gray-400">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs opacity-70">
                         {formatTime(message.timestamp)}
                       </span>
                       {message.role === "assistant" && (
@@ -483,8 +410,8 @@ const Chatbot: React.FC = () => {
                           onClick={() => toggleSpeech(message)}
                           className={`p-1 rounded-full ${
                             isSpeaking && speechMessageId === message.id
-                              ? "bg-red-500/20 text-red-500"
-                              : "bg-gray-200/30 hover:bg-gray-200/50 text-gray-700 dark:text-gray-300"
+                              ? "text-red-500"
+                              : "text-gray-500 dark:text-gray-400 hover:text-blue-500"
                           }`}
                           title={
                             isSpeaking && speechMessageId === message.id
@@ -493,9 +420,9 @@ const Chatbot: React.FC = () => {
                           }
                         >
                           {isSpeaking && speechMessageId === message.id ? (
-                            <VolumeX className="w-4 h-4" />
+                            <VolumeX className="w-3 h-3" />
                           ) : (
-                            <Volume2 className="w-4 h-4" />
+                            <Volume2 className="w-3 h-3" />
                           )}
                         </button>
                       )}
@@ -503,23 +430,16 @@ const Chatbot: React.FC = () => {
                   </div>
                   {renderMessageContent(message.content)}
                 </div>
-              </motion.div>
+              </div>
             ))}
-          </AnimatePresence>
+          </>
         )}
         {isLoading && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="flex justify-start"
-          >
-            <div
-              className="max-w-3xl rounded-2xl px-5 py-4"
-              style={darkGlassStyle}
-            >
+          <div className="flex justify-start">
+            <div className="max-w-3xl rounded-lg px-4 py-3 bg-white dark:bg-gray-800 shadow-sm">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full flex items-center justify-center bg-blue-500/20">
-                  <Bot className="w-4 h-4 text-blue-400" />
+                <div className="w-6 h-6 rounded-full flex items-center justify-center bg-blue-500/20">
+                  <Bot className="w-3 h-3 text-blue-400" />
                 </div>
                 <div className="flex space-x-2">
                   <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce"></div>
@@ -534,20 +454,12 @@ const Chatbot: React.FC = () => {
                 </div>
               </div>
             </div>
-          </motion.div>
+          </div>
         )}
         {error && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-red-500 dark:text-red-400 text-sm p-3 px-4 text-center rounded-xl"
-            style={{
-              background: "rgba(239, 68, 68, 0.15)",
-              backdropFilter: "blur(8px)",
-            }}
-          >
+          <div className="text-red-500 dark:text-red-400 text-sm p-3 text-center rounded-lg bg-red-50 dark:bg-red-900/20">
             {error}
-          </motion.div>
+          </div>
         )}
         <div ref={messagesEndRef} />
       </div>
@@ -555,21 +467,16 @@ const Chatbot: React.FC = () => {
       {/* Input area */}
       <form
         onSubmit={handleSubmit}
-        className="p-5 relative z-10"
-        style={{
-          borderTop: "1px solid rgba(255, 255, 255, 0.1)",
-          background: "rgba(255, 255, 255, 0.1)",
-          backdropFilter: "blur(12px)",
-        }}
+        className="p-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800"
       >
-        <div className="flex items-end gap-3">
+        <div className="flex items-end gap-2">
           <div className="flex-1 relative">
             <textarea
               ref={textareaRef}
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Type your message or click mic to speak..."
-              className="w-full resize-none rounded-xl px-5 py-4 bg-white/70 dark:bg-gray-800/70 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-transparent transition-all duration-200 pr-12 border border-white/30 dark:border-gray-700/50 shadow-sm"
+              className="w-full resize-none rounded-lg px-4 py-3 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500/30 border border-gray-200 dark:border-gray-600"
               rows={1}
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) {
@@ -577,52 +484,45 @@ const Chatbot: React.FC = () => {
                   handleSubmit(e);
                 }
               }}
-              style={{
-                backdropFilter: "blur(8px)",
-              }}
             />
             <button
               type="button"
               onClick={toggleListening}
-              className={`absolute right-3 bottom-3 p-2 rounded-full transition-all ${
+              className={`absolute right-2 bottom-2 p-1 rounded-full ${
                 isListening
-                  ? "text-white bg-red-500 shadow-lg shadow-red-500/30"
-                  : "text-gray-500 hover:text-blue-500 bg-white/80 hover:bg-white shadow-md dark:bg-gray-700/80 dark:hover:bg-gray-700"
+                  ? "text-white bg-red-500"
+                  : "text-gray-500 hover:text-blue-500 bg-gray-200 dark:bg-gray-600"
               }`}
               title={isListening ? "Stop listening" : "Voice input"}
             >
-              <Mic className="w-5 h-5" />
+              <Mic className="w-4 h-4" />
             </button>
           </div>
-          <motion.button
+          <button
             type="submit"
             disabled={!input.trim() || isLoading}
-            className="p-4 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 disabled:from-gray-400 disabled:to-gray-500 dark:disabled:from-gray-600 dark:disabled:to-gray-700 disabled:cursor-not-allowed transition-all shadow-lg shadow-blue-500/30 hover:shadow-blue-600/40"
-            whileTap={{ scale: 0.95 }}
-            whileHover={{ scale: !input.trim() || isLoading ? 1 : 1.05 }}
+            className="p-3 rounded-lg bg-blue-500 text-white hover:bg-blue-600 disabled:bg-gray-400 dark:disabled:bg-gray-600 disabled:cursor-not-allowed transition-colors"
           >
             {isLoading ? (
-              <Loader2 className="w-5 h-5 animate-spin" />
+              <Loader2 className="w-4 h-4 animate-spin" />
             ) : (
-              <Send className="w-5 h-5" />
+              <Send className="w-4 h-4" />
             )}
-          </motion.button>
+          </button>
         </div>
-        <div className="flex justify-between items-center mt-3">
-          <p className="text-xs text-gray-500 dark:text-gray-400">
+        <div className="flex justify-between items-center mt-2">
+          <p className="text-xs text-center text-gray-500 dark:text-gray-400">
             Gemini may produce inaccurate information. Double-check important
             facts.
           </p>
           {isSpeaking && (
-            <motion.button
+            <button
               onClick={stopAllSpeech}
-              className="text-xs flex items-center gap-1 text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300 px-3 py-1 rounded-full bg-red-500/10"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              className="text-xs flex items-center gap-1 text-red-500 hover:text-red-600 dark:text-red-400 px-2 py-1 rounded-full"
             >
               <VolumeX className="w-3 h-3" />
               Stop reading
-            </motion.button>
+            </button>
           )}
         </div>
       </form>
