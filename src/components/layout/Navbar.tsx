@@ -23,6 +23,11 @@ const Navbar: React.FC = () => {
       text: "Chatbot",
       show: location.pathname !== "/chatbot",
     },
+    {
+      to: "/compiler",
+      text: "Compiler",
+      show: location.pathname !== "/compiler",
+    },
   ];
 
   return (

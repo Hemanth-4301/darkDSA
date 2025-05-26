@@ -1,4 +1,8 @@
 /* From Uiverse.io by G4b413l */
+
+.hljs {
+  background: transparent !important;
+}
 .ball {
   position: relative;
   bottom: 50px;

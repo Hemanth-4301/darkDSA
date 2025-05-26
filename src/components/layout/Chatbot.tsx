@@ -2,7 +2,17 @@ import React, { useState, useRef, useEffect } from "react";
 import { marked } from "marked";
 import hljs from "highlight.js";
 import "highlight.js/styles/github.css";
-import { Copy, Send, Bot, Loader2, Volume2, VolumeX, Mic } from "lucide-react";
+import "../home/App.css";
+import {
+  Copy,
+  Send,
+  Bot,
+  Loader2,
+  Volume2,
+  VolumeX,
+  Mic,
+  Plus,
+} from "lucide-react";
 
 // Configure marked to use highlight.js for code blocks
 marked.setOptions({
@@ -33,6 +43,11 @@ const Chatbot: React.FC = () => {
   const speechSynthesis = window.speechSynthesis;
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
   const recognitionRef = useRef<any>(null);
+
+  const startNewConversation = () => {
+    setMessages([]);
+    setInput("");
+  };
 
   // Initialize speech recognition
   useEffect(() => {
@@ -336,6 +351,19 @@ const Chatbot: React.FC = () => {
   return (
     <div className="flex flex-col h-full bg-white/50 dark:bg-gray-900/50 backdrop-blur-lg rounded-xl overflow-hidden border border-white/20 shadow-lg">
       {/* Chat area with custom scrollbar */}
+      <div className="flex items-center justify-between p-4 border-b border-white/20 dark:border-gray-800/20">
+        <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
+          Gemini
+        </h2>
+        <button
+          onClick={startNewConversation}
+          className="p-2 rounded-lg flex  justify-center items-center gap-1 bg-green-500/90 text-white text-sm hover:bg-green-600/90 transition-colors backdrop-blur-sm"
+          title="New Conversation"
+        >
+          <Plus className="w-4 h-4" />
+          new chat
+        </button>
+      </div>
       <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin scrollbar-thumb-gray-400/30 scrollbar-track-transparent">
         {messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-gray-600 dark:text-gray-300 p-4">
