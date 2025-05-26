@@ -24,7 +24,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             </main>
 
             {location.pathname != "/chatbot" && (
-              <div className="p-2  md:p-10 md:pb-20 pb-20">
+              <div className="p-1 lg:p-10 lg:pb-20 pb-20">
                 <Chatbot />
               </div>
             )}
