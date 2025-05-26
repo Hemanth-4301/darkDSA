@@ -1,9 +1,9 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { CheckCircle2 } from 'lucide-react';
-import { Category } from '../../types';
-import { useProgress } from '../../context/ProgressContext';
-import * as LucideIcons from 'lucide-react';
+import React from "react";
+import { Link } from "react-router-dom";
+import { CheckCircle2 } from "lucide-react";
+import { Category } from "../../types";
+import { useProgress } from "../../context/ProgressContext";
+import * as LucideIcons from "lucide-react";
 
 interface CategoryCardProps {
   category: Category;
@@ -13,8 +13,9 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category }) => {
   const { getSolvedCount } = useProgress();
   const solvedCount = getSolvedCount(category.id);
   const progress = (solvedCount / category.count) * 100;
-  
-  const IconComponent = LucideIcons[category.icon as keyof typeof LucideIcons] || LucideIcons.Code2;
+
+  const IconComponent =
+    LucideIcons[category.icon as keyof typeof LucideIcons] || LucideIcons.Code2;
 
   return (
     <Link
@@ -36,15 +37,15 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category }) => {
             )}
           </div>
         </div>
-        
+
         <h3 className="text-xl font-bold mb-2 text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors duration-300">
           {category.name}
         </h3>
-        
+
         <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">
           {category.description}
         </p>
-        
+
         <div className="relative h-2 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
           <div
             className="absolute top-0 left-0 h-full bg-gradient-to-r from-primary-500 to-secondary-500 rounded-full transition-all duration-500 ease-out"

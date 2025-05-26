@@ -1,28 +1,35 @@
-import { Question } from "./types";
+import { Question } from '../types';
 
-export const trieQuestions: Question[] = [
+export const triesQuestions: Question[] = [
   {
-    id: "implement-trie-prefix-tree",
+    id: 58,
     title: "Implement Trie (Prefix Tree)",
-    description: "A trie (pronounced as \"try\") or prefix tree is a tree data structure used to efficiently store and retrieve keys in a dataset of strings. There are various applications of this data structure, such as autocomplete and spellchecker.\n\nImplement the Trie class:\n\n- Trie() Initializes the trie object.\n- void insert(String word) Inserts the string word into the trie.\n- boolean search(String word) Returns true if the string word is in the trie (i.e., was inserted before), and false otherwise.\n- boolean startsWith(String prefix) Returns true if there is a previously inserted string word that has the prefix prefix, and false otherwise.",
-    difficulty: "Medium",
-    tags: ["Hash Table", "String", "Design", "Trie"],
+    description: "A trie (pronounced as \"try\") or prefix tree is a tree data structure used to efficiently store and retrieve keys in a dataset of strings. There are various applications of this data structure, such as autocomplete and spellchecker. Implement the Trie class.",
     examples: [
       {
-        input: '["Trie", "insert", "search", "search", "startsWith", "insert", "search"]\n[[], ["apple"], ["apple"], ["app"], ["app"], ["app"], ["app"]]',
-        output: '[null, null, true, false, true, null, true]',
-        explanation: 'Trie trie = new Trie();\ntrie.insert("apple");\ntrie.search("apple");   // return True\ntrie.search("app");     // return False\ntrie.startsWith("app"); // return True\ntrie.insert("app");\ntrie.search("app");     // return True'
+        input: `["Trie", "insert", "search", "search", "startsWith", "insert", "search"]
+[[], ["apple"], ["apple"], ["app"], ["app"], ["app"], ["app"]]`,
+        output: "[null, null, true, false, true, null, true]",
+        explanation: "Trie trie = new Trie();\ntrie.insert(\"apple\");\ntrie.search(\"apple\");   // returns true\ntrie.search(\"app\");     // returns false\ntrie.startsWith(\"app\"); // returns true\ntrie.insert(\"app\");\ntrie.search(\"app\");     // returns true"
       }
     ],
-    bruteForceSolution: `class Trie {
+    solutions: [
+      {
+        approach: "Brute Force",
+        code: `class Trie {
     private Set<String> words;
+    private Set<String> prefixes;
     
     public Trie() {
         words = new HashSet<>();
+        prefixes = new HashSet<>();
     }
     
     public void insert(String word) {
         words.add(word);
+        for (int i = 1; i <= word.length(); i++) {
+            prefixes.add(word.substring(0, i));
+        }
     }
     
     public boolean search(String word) {
@@ -30,18 +37,19 @@ export const trieQuestions: Question[] = [
     }
     
     public boolean startsWith(String prefix) {
-        for (String word : words) {
-            if (word.startsWith(prefix)) {
-                return true;
-            }
-        }
-        return false;
+        return prefixes.contains(prefix);
     }
 }`,
-    optimalSolution: `class Trie {
-    class TrieNode {
-        TrieNode[] children;
-        boolean isEndOfWord;
+        timeComplexity: "O(n) for insert, O(1) for search and startsWith",
+        spaceComplexity: "O(m*n) where m is number of words and n is average length",
+        explanation: "We use two HashSets to store complete words and all possible prefixes."
+      },
+      {
+        approach: "Optimal",
+        code: `class Trie {
+    private class TrieNode {
+        private TrieNode[] children;
+        private boolean isEndOfWord;
         
         public TrieNode() {
             children = new TrieNode[26];
@@ -57,7 +65,6 @@ export const trieQuestions: Question[] = [
     
     public void insert(String word) {
         TrieNode current = root;
-        
         for (char c : word.toCharArray()) {
             int index = c - 'a';
             if (current.children[index] == null) {
@@ -65,68 +72,59 @@ export const trieQuestions: Question[] = [
             }
             current = current.children[index];
         }
-        
         current.isEndOfWord = true;
     }
     
     public boolean search(String word) {
-        TrieNode current = root;
-        
-        for (char c : word.toCharArray()) {
-            int index = c - 'a';
-            if (current.children[index] == null) {
-                return false;
-            }
-            current = current.children[index];
-        }
-        
-        return current.isEndOfWord;
+        TrieNode node = searchNode(word);
+        return node != null && node.isEndOfWord;
     }
     
     public boolean startsWith(String prefix) {
+        return searchNode(prefix) != null;
+    }
+    
+    private TrieNode searchNode(String str) {
         TrieNode current = root;
-        
-        for (char c : prefix.toCharArray()) {
+        for (char c : str.toCharArray()) {
             int index = c - 'a';
             if (current.children[index] == null) {
-                return false;
+                return null;
             }
             current = current.children[index];
         }
-        
-        return true;
+        return current;
     }
 }`,
-    bruteForceComplexity: {
-      time: "O(1) for insert, O(1) for search, O(n*m) for startsWith",
-      space: "O(n*m)",
-      reasoning: "HashSet operations are O(1), but startsWith requires checking all words."
-    },
-    optimalComplexity: {
-      time: "O(m) for all operations",
-      space: "O(ALPHABET_SIZE * N * M)",
-      reasoning: "All operations depend on word length m, space depends on number of nodes in trie."
-    },
-    leetcodeUrl: "https://leetcode.com/problems/implement-trie-prefix-tree/"
-  },
-  {
-    id: "add-and-search-word-data-structure-design",
-    title: "Design Add and Search Words Data Structure",
-    description: "Design a data structure that supports adding new words and finding if a string matches any previously added string.\n\nImplement the WordDictionary class:\n\n- WordDictionary() Initializes the object.\n- void addWord(word) Adds word to the data structure, it can be matched later.\n- bool search(word) Returns true if there is any string in the data structure that matches word or false otherwise. word may contain dots '.' where dots can be matched with any letter.",
-    difficulty: "Medium",
-    tags: ["String", "Depth-First Search", "Design", "Trie"],
-    examples: [
-      {
-        input: '["WordDictionary","addWord","addWord","addWord","search","search","search","search"]\n[[],["bad"],["dad"],["mad"],["pad"],["bad"],[".ad"],["b.."]]',
-        output: '[null,null,null,null,false,true,true,true]',
-        explanation: 'WordDictionary wordDictionary = new WordDictionary();\nwordDictionary.addWord("bad");\nwordDictionary.addWord("dad");\nwordDictionary.addWord("mad");\nwordDictionary.search("pad"); // return False\nwordDictionary.search("bad"); // return True\nwordDictionary.search(".ad"); // return True\nwordDictionary.search("b.."); // return True'
+        timeComplexity: "O(m) for all operations where m is length of word",
+        spaceComplexity: "O(ALPHABET_SIZE * m * n) where n is number of words",
+        explanation: "We implement a proper trie data structure using nodes with character links. Each node also has a flag indicating if it represents the end of a word."
       }
     ],
-    bruteForceSolution: `class WordDictionary {
-    private List<String> words;
+    leetCodeUrl: "https://leetcode.com/problems/implement-trie-prefix-tree/",
+    difficulty: "Medium",
+    category: "tries"
+  },
+  {
+    id: 59,
+    title: "Add and Search Word",
+    description: "Design a data structure that supports adding new words and finding if a string matches any previously added string. Implement the WordDictionary class. The word can contain dots '.' where dots can be matched with any letter.",
+    examples: [
+      {
+        input: `["WordDictionary","addWord","addWord","addWord","search","search","search","search"]
+[[],["bad"],["dad"],["mad"],["pad"],["bad"],[".ad"],["b.."]]`,
+        output: "[null,null,null,null,false,true,true,true]",
+        explanation: "WordDictionary wordDictionary = new WordDictionary();\nwordDictionary.addWord(\"bad\");\nwordDictionary.addWord(\"dad\");\nwordDictionary.addWord(\"mad\");\nwordDictionary.search(\"pad\"); // return False\nwordDictionary.search(\"bad\"); // return True\nwordDictionary.search(\".ad\"); // return True\nwordDictionary.search(\"b..\"); // return True"
+      }
+    ],
+    solutions: [
+      {
+        approach: "Brute Force",
+        code: `class WordDictionary {
+    private Set<String> words;
     
     public WordDictionary() {
-        words = new ArrayList<>();
+        words = new HashSet<>();
     }
     
     public void addWord(String word) {
@@ -134,32 +132,36 @@ export const trieQuestions: Question[] = [
     }
     
     public boolean search(String word) {
-        for (String w : words) {
-            if (matches(w, word)) {
-                return true;
-            }
+        if (!word.contains(".")) {
+            return words.contains(word);
         }
+        
+        for (String w : words) {
+            if (w.length() != word.length()) continue;
+            
+            boolean matches = true;
+            for (int i = 0; i < word.length(); i++) {
+                if (word.charAt(i) != '.' && word.charAt(i) != w.charAt(i)) {
+                    matches = false;
+                    break;
+                }
+            }
+            if (matches) return true;
+        }
+        
         return false;
     }
-    
-    private boolean matches(String word, String pattern) {
-        if (word.length() != pattern.length()) {
-            return false;
-        }
-        
-        for (int i = 0; i < word.length(); i++) {
-            if (pattern.charAt(i) != '.' && word.charAt(i) != pattern.charAt(i)) {
-                return false;
-            }
-        }
-        
-        return true;
-    }
 }`,
-    optimalSolution: `class WordDictionary {
-    class TrieNode {
-        TrieNode[] children;
-        boolean isEndOfWord;
+        timeComplexity: "O(1) for addWord, O(n*m) for search where n is number of words",
+        spaceComplexity: "O(n*m) where n is number of words and m is average length",
+        explanation: "We store words in a HashSet and check each word against the pattern when searching."
+      },
+      {
+        approach: "Optimal",
+        code: `class WordDictionary {
+    private class TrieNode {
+        private TrieNode[] children;
+        private boolean isEndOfWord;
         
         public TrieNode() {
             children = new TrieNode[26];
@@ -175,7 +177,6 @@ export const trieQuestions: Question[] = [
     
     public void addWord(String word) {
         TrieNode current = root;
-        
         for (char c : word.toCharArray()) {
             int index = c - 'a';
             if (current.children[index] == null) {
@@ -183,7 +184,6 @@ export const trieQuestions: Question[] = [
             }
             current = current.children[index];
         }
-        
         current.isEndOfWord = true;
     }
     
@@ -197,9 +197,7 @@ export const trieQuestions: Question[] = [
         }
         
         char c = word.charAt(index);
-        
         if (c == '.') {
-            // Try all possible children
             for (TrieNode child : node.children) {
                 if (child != null && searchHelper(word, index + 1, child)) {
                     return true;
@@ -207,159 +205,152 @@ export const trieQuestions: Question[] = [
             }
             return false;
         } else {
-            int charIndex = c - 'a';
-            if (node.children[charIndex] == null) {
+            int childIndex = c - 'a';
+            TrieNode child = node.children[childIndex];
+            if (child == null) {
                 return false;
             }
-            return searchHelper(word, index + 1, node.children[charIndex]);
+            return searchHelper(word, index + 1, child);
         }
     }
 }`,
-    bruteForceComplexity: {
-      time: "O(1) for addWord, O(n*m) for search",
-      space: "O(n*m)",
-      reasoning: "Search requires checking all stored words against pattern."
-    },
-    optimalComplexity: {
-      time: "O(m) for addWord, O(26^k * m) for search where k is number of dots",
-      space: "O(ALPHABET_SIZE * N * M)",
-      reasoning: "Trie structure with DFS for wildcard matching."
-    },
-    leetcodeUrl: "https://leetcode.com/problems/design-add-and-search-words-data-structure/"
-  },
-  {
-    id: "word-search-ii",
-    title: "Word Search II",
-    description: "Given an m x n board of characters and a list of strings words, return all words on the board.\n\nEach word must be constructed from letters of sequentially adjacent cells, where adjacent cells are horizontally or vertically neighboring. The same letter cell may not be used more than once in a word.",
-    difficulty: "Hard",
-    tags: ["Array", "String", "Backtracking", "Trie", "Matrix"],
-    examples: [
-      {
-        input: 'board = [["o","a","a","n"],["e","t","a","e"],["i","h","k","r"],["i","f","l","v"]], words = ["oath","pea","eat","rain"]',
-        output: '["eat","oath"]'
-      },
-      {
-        input: 'board = [["a","b"],["c","d"]], words = ["abcb"]',
-        output: '[]'
+        timeComplexity: "O(m) for addWord, O(26^n) worst case for search with all dots",
+        spaceComplexity: "O(ALPHABET_SIZE * m * n)",
+        explanation: "We use a trie with recursive search that handles dots by trying all possible characters at that position."
       }
     ],
-    bruteForceSolution: `class Solution {
-    public List<String> findWords(char[][] board, String[] words) {
-        List<String> result = new ArrayList<>();
-        
-        for (String word : words) {
-            if (wordExists(board, word)) {
-                result.add(word);
-            }
+    leetCodeUrl: "https://leetcode.com/problems/design-add-and-search-words-data-structure/",
+    difficulty: "Medium",
+    category: "tries"
+  },
+  {
+    id: 60,
+    title: "Word Search II",
+    description: "Given an m x n board of characters and a list of strings words, return all words on the board. Each word must be constructed from letters of sequentially adjacent cells, where adjacent cells are horizontally or vertically neighboring. The same letter cell may not be used more than once in a word.",
+    examples: [
+      {
+        input: `board = [["o","a","a","n"],["e","t","a","e"],["i","h","k","r"],["i","f","l","v"]], words = ["oath","pea","eat","rain"]`,
+        output: `["eat","oath"]`
+      },
+      {
+        input: `board = [["a","b"],["c","d"]], words = ["abcb"]`,
+        output: "[]"
+      }
+    ],
+    solutions: [
+      {
+        approach: "Brute Force",
+        code: `public List<String> findWords(char[][] board, String[] words) {
+    List<String> result = new ArrayList<>();
+    for (String word : words) {
+        if (exist(board, word)) {
+            result.add(word);
         }
-        
-        return result;
     }
+    return result;
+}
+
+private boolean exist(char[][] board, String word) {
+    int m = board.length;
+    int n = board[0].length;
     
-    private boolean wordExists(char[][] board, String word) {
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board[0].length; j++) {
-                if (dfs(board, word, 0, i, j, new boolean[board.length][board[0].length])) {
-                    return true;
-                }
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            if (dfs(board, i, j, word, 0)) {
+                return true;
             }
         }
+    }
+    return false;
+}
+
+private boolean dfs(char[][] board, int i, int j, String word, int index) {
+    if (index == word.length()) return true;
+    
+    if (i < 0 || i >= board.length || j < 0 || j >= board[0].length ||
+        board[i][j] != word.charAt(index)) {
         return false;
     }
     
-    private boolean dfs(char[][] board, String word, int index, int row, int col, boolean[][] visited) {
-        if (index == word.length()) return true;
-        
-        if (row < 0 || row >= board.length || col < 0 || col >= board[0].length ||
-            visited[row][col] || board[row][col] != word.charAt(index)) {
-            return false;
-        }
-        
-        visited[row][col] = true;
-        
-        boolean found = dfs(board, word, index + 1, row + 1, col, visited) ||
-                       dfs(board, word, index + 1, row - 1, col, visited) ||
-                       dfs(board, word, index + 1, row, col + 1, visited) ||
-                       dfs(board, word, index + 1, row, col - 1, visited);
-        
-        visited[row][col] = false;
-        return found;
-    }
+    char temp = board[i][j];
+    board[i][j] = '#';
+    
+    boolean found = dfs(board, i+1, j, word, index+1) ||
+                   dfs(board, i-1, j, word, index+1) ||
+                   dfs(board, i, j+1, word, index+1) ||
+                   dfs(board, i, j-1, word, index+1);
+    
+    board[i][j] = temp;
+    return found;
 }`,
-    optimalSolution: `class Solution {
-    class TrieNode {
-        TrieNode[] children;
-        String word;
-        
-        public TrieNode() {
-            children = new TrieNode[26];
-            word = null;
+        timeComplexity: "O(N * 4^L) where N is number of cells and L is max word length",
+        spaceComplexity: "O(L)",
+        explanation: "For each word, we try to find it on the board using DFS from each starting position."
+      },
+      {
+        approach: "Optimal",
+        code: `class TrieNode {
+    TrieNode[] children = new TrieNode[26];
+    String word = null;
+}
+
+public List<String> findWords(char[][] board, String[] words) {
+    List<String> result = new ArrayList<>();
+    TrieNode root = buildTrie(words);
+    
+    for (int i = 0; i < board.length; i++) {
+        for (int j = 0; j < board[0].length; j++) {
+            dfs(board, i, j, root, result);
         }
     }
     
-    public List<String> findWords(char[][] board, String[] words) {
-        // Build Trie
-        TrieNode root = new TrieNode();
-        for (String word : words) {
-            TrieNode current = root;
-            for (char c : word.toCharArray()) {
-                int index = c - 'a';
-                if (current.children[index] == null) {
-                    current.children[index] = new TrieNode();
-                }
-                current = current.children[index];
+    return result;
+}
+
+private TrieNode buildTrie(String[] words) {
+    TrieNode root = new TrieNode();
+    for (String word : words) {
+        TrieNode node = root;
+        for (char c : word.toCharArray()) {
+            int index = c - 'a';
+            if (node.children[index] == null) {
+                node.children[index] = new TrieNode();
             }
-            current.word = word;
+            node = node.children[index];
         }
-        
-        List<String> result = new ArrayList<>();
-        
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board[0].length; j++) {
-                dfs(board, i, j, root, result);
-            }
-        }
-        
-        return result;
+        node.word = word;
+    }
+    return root;
+}
+
+private void dfs(char[][] board, int i, int j, TrieNode node, List<String> result) {
+    if (i < 0 || i >= board.length || j < 0 || j >= board[0].length ||
+        board[i][j] == '#' || node.children[board[i][j] - 'a'] == null) {
+        return;
     }
     
-    private void dfs(char[][] board, int row, int col, TrieNode node, List<String> result) {
-        if (row < 0 || row >= board.length || col < 0 || col >= board[0].length) {
-            return;
-        }
-        
-        char c = board[row][col];
-        if (c == '#' || node.children[c - 'a'] == null) {
-            return;
-        }
-        
-        node = node.children[c - 'a'];
-        
-        if (node.word != null) {
-            result.add(node.word);
-            node.word = null; // Avoid duplicates
-        }
-        
-        board[row][col] = '#'; // Mark as visited
-        
-        dfs(board, row + 1, col, node, result);
-        dfs(board, row - 1, col, node, result);
-        dfs(board, row, col + 1, node, result);
-        dfs(board, row, col - 1, node, result);
-        
-        board[row][col] = c; // Backtrack
+    char c = board[i][j];
+    node = node.children[c - 'a'];
+    
+    if (node.word != null) {
+        result.add(node.word);
+        node.word = null;  // avoid duplicates
     }
+    
+    board[i][j] = '#';
+    dfs(board, i+1, j, node, result);
+    dfs(board, i-1, j, node, result);
+    dfs(board, i, j+1, node, result);
+    dfs(board, i, j-1, node, result);
+    board[i][j] = c;
 }`,
-    bruteForceComplexity: {
-      time: "O(N * 4^(L) * M)",
-      space: "O(L)",
-      reasoning: "For each word, perform DFS from every cell. N=words, L=max word length, M=cells."
-    },
-    optimalComplexity: {
-      time: "O(M * 4^L)",
-      space: "O(N * L)",
-      reasoning: "Build trie once, then single DFS traversal. Trie eliminates redundant searches."
-    },
-    leetcodeUrl: "https://leetcode.com/problems/word-search-ii/"
+        timeComplexity: "O(M * N * 4^L) where M,N are board dimensions",
+        spaceComplexity: "O(number of total chars in words)",
+        explanation: "We build a trie from the words, then use DFS with the trie to find words on the board. This avoids checking each word separately."
+      }
+    ],
+    leetCodeUrl: "https://leetcode.com/problems/word-search-ii/",
+    difficulty: "Hard",
+    category: "tries"
   }
 ];

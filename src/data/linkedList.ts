@@ -1,910 +1,807 @@
-import { Question } from "";
+import { Question } from '../types';
 
 export const linkedListQuestions: Question[] = [
   {
-    id: "reverse-linked-list",
+    id: 38,
     title: "Reverse Linked List",
-    description:
-      "Given the head of a singly linked list, reverse the list, and return the reversed list.",
-    difficulty: "Easy",
-    tags: ["Linked List", "Recursion"],
+    description: "Given the head of a singly linked list, reverse the list, and return the reversed list.",
     examples: [
       {
         input: "head = [1,2,3,4,5]",
-        output: "[5,4,3,2,1]",
+        output: "[5,4,3,2,1]"
       },
       {
         input: "head = [1,2]",
-        output: "[2,1]",
-      },
+        output: "[2,1]"
+      }
     ],
-    bruteForceSolution: `class Solution {
-    public ListNode reverseList(ListNode head) {
-        // Store all values in array, then rebuild list
-        List<Integer> values = new ArrayList<>();
-        ListNode current = head;
-        
-        while (current != null) {
-            values.add(current.val);
-            current = current.next;
-        }
-        
-        // Build new list in reverse order
-        ListNode dummy = new ListNode(0);
-        current = dummy;
-        
-        for (int i = values.size() - 1; i >= 0; i--) {
-            current.next = new ListNode(values.get(i));
-            current = current.next;
-        }
-        
-        return dummy.next;
+    solutions: [
+      {
+        approach: "Brute Force",
+        code: `public ListNode reverseList(ListNode head) {
+    ArrayList<Integer> values = new ArrayList<>();
+    ListNode current = head;
+    
+    while (current != null) {
+        values.add(current.val);
+        current = current.next;
     }
-}`,
-    optimalSolution: `class Solution {
-    public ListNode reverseList(ListNode head) {
-        ListNode prev = null;
-        ListNode current = head;
-        
-        while (current != null) {
-            ListNode nextTemp = current.next;
-            current.next = prev;
-            prev = current;
-            current = nextTemp;
-        }
-        
-        return prev;
+    
+    current = head;
+    for (int i = values.size() - 1; i >= 0; i--) {
+        current.val = values.get(i);
+        current = current.next;
     }
+    
+    return head;
 }`,
-    bruteForceComplexity: {
-      time: "O(n)",
-      space: "O(n)",
-      reasoning:
-        "Store all values in array then rebuild list, requiring extra space.",
-    },
-    optimalComplexity: {
-      time: "O(n)",
-      space: "O(1)",
-      reasoning:
-        "Iterative approach reversing pointers in place with constant extra space.",
-    },
-    leetcodeUrl: "https://leetcode.com/problems/reverse-linked-list/",
+        timeComplexity: "O(n)",
+        spaceComplexity: "O(n)",
+        explanation: "We store all values in an array, then traverse the list again to update values in reverse order."
+      },
+      {
+        approach: "Optimal",
+        code: `public ListNode reverseList(ListNode head) {
+    ListNode prev = null;
+    ListNode current = head;
+    
+    while (current != null) {
+        ListNode nextTemp = current.next;
+        current.next = prev;
+        prev = current;
+        current = nextTemp;
+    }
+    
+    return prev;
+}`,
+        timeComplexity: "O(n)",
+        spaceComplexity: "O(1)",
+        explanation: "We use three pointers to reverse the links between nodes as we traverse the list."
+      }
+    ],
+    leetCodeUrl: "https://leetcode.com/problems/reverse-linked-list/",
+    difficulty: "Easy",
+    category: "linkedList"
   },
   {
-    id: "merge-two-sorted-lists",
+    id: 39,
     title: "Merge Two Sorted Lists",
-    description:
-      "You are given the heads of two sorted linked lists list1 and list2.\n\nMerge the two lists in a one sorted list. The list should be made by splicing together the nodes of the first two lists.\n\nReturn the head of the merged linked list.",
-    difficulty: "Easy",
-    tags: ["Linked List", "Recursion"],
+    description: "You are given the heads of two sorted linked lists list1 and list2. Merge the two lists in a one sorted list. The list should be made by splicing together the nodes of the first two lists. Return the head of the merged linked list.",
     examples: [
       {
         input: "list1 = [1,2,4], list2 = [1,3,4]",
-        output: "[1,1,2,3,4,4]",
+        output: "[1,1,2,3,4,4]"
       },
       {
         input: "list1 = [], list2 = []",
-        output: "[]",
-      },
+        output: "[]"
+      }
     ],
-    bruteForceSolution: `class Solution {
-    public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
-        // Collect all values and sort them
-        List<Integer> values = new ArrayList<>();
-        
-        ListNode current = list1;
-        while (current != null) {
-            values.add(current.val);
-            current = current.next;
-        }
-        
-        current = list2;
-        while (current != null) {
-            values.add(current.val);
-            current = current.next;
-        }
-        
-        Collections.sort(values);
-        
-        // Build new sorted list
-        ListNode dummy = new ListNode(0);
-        current = dummy;
-        
-        for (int val : values) {
-            current.next = new ListNode(val);
-            current = current.next;
-        }
-        
-        return dummy.next;
+    solutions: [
+      {
+        approach: "Brute Force",
+        code: `public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
+    ArrayList<Integer> values = new ArrayList<>();
+    
+    ListNode current = list1;
+    while (current != null) {
+        values.add(current.val);
+        current = current.next;
     }
-}`,
-    optimalSolution: `class Solution {
-    public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
-        ListNode dummy = new ListNode(0);
-        ListNode current = dummy;
-        
-        while (list1 != null && list2 != null) {
-            if (list1.val <= list2.val) {
-                current.next = list1;
-                list1 = list1.next;
-            } else {
-                current.next = list2;
-                list2 = list2.next;
-            }
-            current = current.next;
-        }
-        
-        // Attach remaining nodes
-        current.next = (list1 != null) ? list1 : list2;
-        
-        return dummy.next;
+    
+    current = list2;
+    while (current != null) {
+        values.add(current.val);
+        current = current.next;
     }
+    
+    Collections.sort(values);
+    
+    ListNode dummy = new ListNode(0);
+    current = dummy;
+    for (int val : values) {
+        current.next = new ListNode(val);
+        current = current.next;
+    }
+    
+    return dummy.next;
 }`,
-    bruteForceComplexity: {
-      time: "O((m + n) log(m + n))",
-      space: "O(m + n)",
-      reasoning: "Collect all values, sort them, then rebuild list.",
-    },
-    optimalComplexity: {
-      time: "O(m + n)",
-      space: "O(1)",
-      reasoning:
-        "Single pass through both lists using two pointers to merge in sorted order.",
-    },
-    leetcodeUrl: "https://leetcode.com/problems/merge-two-sorted-lists/",
+        timeComplexity: "O(n log n)",
+        spaceComplexity: "O(n)",
+        explanation: "We collect all values in an array, sort them, and create a new linked list."
+      },
+      {
+        approach: "Optimal",
+        code: `public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
+    ListNode dummy = new ListNode(0);
+    ListNode current = dummy;
+    
+    while (list1 != null && list2 != null) {
+        if (list1.val <= list2.val) {
+            current.next = list1;
+            list1 = list1.next;
+        } else {
+            current.next = list2;
+            list2 = list2.next;
+        }
+        current = current.next;
+    }
+    
+    current.next = list1 != null ? list1 : list2;
+    
+    return dummy.next;
+}`,
+        timeComplexity: "O(n)",
+        spaceComplexity: "O(1)",
+        explanation: "We maintain a pointer to the current node and compare values from both lists, choosing the smaller one each time."
+      }
+    ],
+    leetCodeUrl: "https://leetcode.com/problems/merge-two-sorted-lists/",
+    difficulty: "Easy",
+    category: "linkedList"
   },
   {
-    id: "reorder-list",
+    id: 40,
     title: "Reorder List",
-    description:
-      "You are given the head of a singly linked-list. The list can be represented as:\n\nL0 → L1 → … → Ln - 1 → Ln\n\nReorder the list to be on the following form:\n\nL0 → Ln → L1 → Ln - 1 → L2 → Ln - 2 → …\n\nYou may not modify the values in the list's nodes. Only nodes themselves may be changed.",
-    difficulty: "Medium",
-    tags: ["Linked List", "Two Pointers", "Stack", "Recursion"],
+    description: "You are given the head of a singly linked-list. The list can be represented as: L0 → L1 → … → Ln - 1 → Ln. Reorder the list to be: L0 → Ln → L1 → Ln - 1 → L2 → Ln - 2 → …",
     examples: [
       {
         input: "head = [1,2,3,4]",
-        output: "[1,4,2,3]",
+        output: "[1,4,2,3]"
       },
       {
         input: "head = [1,2,3,4,5]",
-        output: "[1,5,2,4,3]",
-      },
+        output: "[1,5,2,4,3]"
+      }
     ],
-    bruteForceSolution: `class Solution {
-    public void reorderList(ListNode head) {
-        if (head == null || head.next == null) return;
-        
-        // Store all nodes in array
-        List<ListNode> nodes = new ArrayList<>();
-        ListNode current = head;
-        
-        while (current != null) {
-            nodes.add(current);
-            current = current.next;
-        }
-        
-        // Reorder using two pointers on array
-        int left = 0, right = nodes.size() - 1;
-        
-        while (left < right) {
-            nodes.get(left).next = nodes.get(right);
-            left++;
-            
-            if (left >= right) break;
-            
-            nodes.get(right).next = nodes.get(left);
-            right--;
-        }
-        
-        nodes.get(left).next = null;
-    }
-}`,
-    optimalSolution: `class Solution {
-    public void reorderList(ListNode head) {
-        if (head == null || head.next == null) return;
-        
-        // Find middle of list
-        ListNode slow = head, fast = head;
-        while (fast.next != null && fast.next.next != null) {
-            slow = slow.next;
-            fast = fast.next.next;
-        }
-        
-        // Reverse second half
-        ListNode second = reverseList(slow.next);
-        slow.next = null;
-        
-        // Merge two halves
-        ListNode first = head;
-        while (second != null) {
-            ListNode temp1 = first.next;
-            ListNode temp2 = second.next;
-            
-            first.next = second;
-            second.next = temp1;
-            
-            first = temp1;
-            second = temp2;
-        }
+    solutions: [
+      {
+        approach: "Brute Force",
+        code: `public void reorderList(ListNode head) {
+    if (head == null || head.next == null) return;
+    
+    ArrayList<ListNode> nodes = new ArrayList<>();
+    ListNode current = head;
+    while (current != null) {
+        nodes.add(current);
+        current = current.next;
     }
     
-    private ListNode reverseList(ListNode head) {
-        ListNode prev = null;
-        while (head != null) {
-            ListNode next = head.next;
-            head.next = prev;
-            prev = head;
-            head = next;
-        }
-        return prev;
+    int i = 0;
+    int j = nodes.size() - 1;
+    while (i < j) {
+        nodes.get(i).next = nodes.get(j);
+        i++;
+        if (i == j) break;
+        nodes.get(j).next = nodes.get(i);
+        j--;
+    }
+    nodes.get(i).next = null;
+}`,
+        timeComplexity: "O(n)",
+        spaceComplexity: "O(n)",
+        explanation: "We store all nodes in an array and then reorder them using two pointers."
+      },
+      {
+        approach: "Optimal",
+        code: `public void reorderList(ListNode head) {
+    if (head == null || head.next == null) return;
+    
+    // Find middle
+    ListNode slow = head;
+    ListNode fast = head;
+    while (fast.next != null && fast.next.next != null) {
+        slow = slow.next;
+        fast = fast.next.next;
+    }
+    
+    // Reverse second half
+    ListNode prev = null;
+    ListNode curr = slow.next;
+    slow.next = null;
+    while (curr != null) {
+        ListNode nextTemp = curr.next;
+        curr.next = prev;
+        prev = curr;
+        curr = nextTemp;
+    }
+    
+    // Merge lists
+    ListNode first = head;
+    ListNode second = prev;
+    while (second != null) {
+        ListNode temp1 = first.next;
+        ListNode temp2 = second.next;
+        first.next = second;
+        second.next = temp1;
+        first = temp1;
+        second = temp2;
     }
 }`,
-    bruteForceComplexity: {
-      time: "O(n)",
-      space: "O(n)",
-      reasoning: "Store all nodes in array, then reorder using two pointers.",
-    },
-    optimalComplexity: {
-      time: "O(n)",
-      space: "O(1)",
-      reasoning:
-        "Find middle, reverse second half, then merge two halves in place.",
-    },
-    leetcodeUrl: "https://leetcode.com/problems/reorder-list/",
+        timeComplexity: "O(n)",
+        spaceComplexity: "O(1)",
+        explanation: "We find the middle of the list using slow and fast pointers, reverse the second half, and then merge the two halves."
+      }
+    ],
+    leetCodeUrl: "https://leetcode.com/problems/reorder-list/",
+    difficulty: "Medium",
+    category: "linkedList"
   },
   {
-    id: "remove-nth-node-from-end-of-list",
+    id: 41,
     title: "Remove Nth Node From End of List",
-    description:
-      "Given the head of a linked list, remove the nth node from the end of the list and return its head.",
-    difficulty: "Medium",
-    tags: ["Linked List", "Two Pointers"],
+    description: "Given the head of a linked list, remove the nth node from the end of the list and return its head.",
     examples: [
       {
         input: "head = [1,2,3,4,5], n = 2",
-        output: "[1,2,3,5]",
+        output: "[1,2,3,5]"
       },
       {
         input: "head = [1], n = 1",
-        output: "[]",
-      },
+        output: "[]"
+      }
     ],
-    bruteForceSolution: `class Solution {
-    public ListNode removeNthFromEnd(ListNode head, int n) {
-        // First pass: count total nodes
-        int length = 0;
-        ListNode current = head;
-        while (current != null) {
-            length++;
-            current = current.next;
-        }
-        
-        // Calculate position from start
-        int positionFromStart = length - n;
-        
-        // Handle edge case: removing head
-        if (positionFromStart == 0) {
-            return head.next;
-        }
-        
-        // Second pass: find node before target
-        current = head;
-        for (int i = 0; i < positionFromStart - 1; i++) {
-            current = current.next;
-        }
-        
-        // Remove target node
-        current.next = current.next.next;
-        
-        return head;
+    solutions: [
+      {
+        approach: "Brute Force",
+        code: `public ListNode removeNthFromEnd(ListNode head, int n) {
+    // Find length
+    int length = 0;
+    ListNode current = head;
+    while (current != null) {
+        length++;
+        current = current.next;
     }
-}`,
-    optimalSolution: `class Solution {
-    public ListNode removeNthFromEnd(ListNode head, int n) {
-        ListNode dummy = new ListNode(0);
-        dummy.next = head;
-        
-        ListNode first = dummy;
-        ListNode second = dummy;
-        
-        // Move first pointer n+1 steps ahead
-        for (int i = 0; i <= n; i++) {
-            first = first.next;
-        }
-        
-        // Move both pointers until first reaches end
-        while (first != null) {
-            first = first.next;
-            second = second.next;
-        }
-        
-        // Remove nth node from end
-        second.next = second.next.next;
-        
-        return dummy.next;
+    
+    if (length == n) return head.next;
+    
+    current = head;
+    for (int i = 0; i < length - n - 1; i++) {
+        current = current.next;
     }
+    
+    current.next = current.next.next;
+    return head;
 }`,
-    bruteForceComplexity: {
-      time: "O(n)",
-      space: "O(1)",
-      reasoning:
-        "Two passes: first to count length, second to find and remove node.",
-    },
-    optimalComplexity: {
-      time: "O(n)",
-      space: "O(1)",
-      reasoning: "Single pass using two pointers with n+1 gap between them.",
-    },
-    leetcodeUrl:
-      "https://leetcode.com/problems/remove-nth-node-from-end-of-list/",
+        timeComplexity: "O(n)",
+        spaceComplexity: "O(1)",
+        explanation: "We first count the length of the list, then remove the node at position (length - n)."
+      },
+      {
+        approach: "Optimal",
+        code: `public ListNode removeNthFromEnd(ListNode head, int n) {
+    ListNode dummy = new ListNode(0);
+    dummy.next = head;
+    ListNode first = dummy;
+    ListNode second = dummy;
+    
+    // Advance first pointer by n + 1 steps
+    for (int i = 0; i <= n; i++) {
+        first = first.next;
+    }
+    
+    // Move both pointers until first reaches end
+    while (first != null) {
+        first = first.next;
+        second = second.next;
+    }
+    
+    second.next = second.next.next;
+    return dummy.next;
+}`,
+        timeComplexity: "O(n)",
+        spaceComplexity: "O(1)",
+        explanation: "We use two pointers with a gap of n nodes between them. When the first pointer reaches the end, the second pointer is at the node before the one we want to remove."
+      }
+    ],
+    leetCodeUrl: "https://leetcode.com/problems/remove-nth-node-from-end-of-list/",
+    difficulty: "Medium",
+    category: "linkedList"
   },
   {
-    id: "copy-list-with-random-pointer",
+    id: 42,
     title: "Copy List with Random Pointer",
-    description:
-      "A linked list of length n is given such that each node contains an additional random pointer, which could point to any node in the list, or null.\n\nConstruct a deep copy of the list. The deep copy should consist of exactly n brand new nodes, where each new node has its value set to the value of its corresponding original node. Both the next and random pointers of the new nodes should point to new nodes in the copied list such that the pointers in the original list and copied list represent the same list state. None of the pointers in the new list should point to nodes in the original list.\n\nFor example, if there are two nodes X and Y in the original list, where X.random --> Y, then for the corresponding two nodes x and y in the copied list, x.random --> y.\n\nReturn the head of the copied linked list.",
-    difficulty: "Medium",
-    tags: ["Hash Table", "Linked List"],
+    description: "A linked list of length n is given such that each node contains an additional random pointer, which could point to any node in the list, or null. Construct a deep copy of the list.",
     examples: [
       {
         input: "head = [[7,null],[13,0],[11,4],[10,2],[1,0]]",
-        output: "[[7,null],[13,0],[11,4],[10,2],[1,0]]",
+        output: "[[7,null],[13,0],[11,4],[10,2],[1,0]]"
       },
       {
         input: "head = [[1,1],[2,1]]",
-        output: "[[1,1],[2,1]]",
-      },
+        output: "[[1,1],[2,1]]"
+      }
     ],
-    bruteForceSolution: `class Solution {
-    public Node copyRandomList(Node head) {
-        if (head == null) return null;
-        
-        // First pass: create nodes with next pointers
-        Map<Node, Node> oldToNew = new HashMap<>();
-        Node current = head;
-        
-        while (current != null) {
-            oldToNew.put(current, new Node(current.val));
-            current = current.next;
-        }
-        
-        // Second pass: set next pointers
-        current = head;
-        while (current != null) {
-            if (current.next != null) {
-                oldToNew.get(current).next = oldToNew.get(current.next);
-            }
-            current = current.next;
-        }
-        
-        // Third pass: set random pointers
-        current = head;
-        while (current != null) {
-            if (current.random != null) {
-                oldToNew.get(current).random = oldToNew.get(current.random);
-            }
-            current = current.next;
-        }
-        
-        return oldToNew.get(head);
+    solutions: [
+      {
+        approach: "Brute Force",
+        code: `public Node copyRandomList(Node head) {
+    if (head == null) return null;
+    
+    Map<Node, Node> map = new HashMap<>();
+    
+    // First pass: create new nodes
+    Node current = head;
+    while (current != null) {
+        map.put(current, new Node(current.val));
+        current = current.next;
     }
-}`,
-    optimalSolution: `class Solution {
-    public Node copyRandomList(Node head) {
-        if (head == null) return null;
-        
-        Map<Node, Node> oldToNew = new HashMap<>();
-        
-        Node current = head;
-        while (current != null) {
-            oldToNew.put(current, new Node(current.val));
-            current = current.next;
-        }
-        
-        current = head;
-        while (current != null) {
-            Node newNode = oldToNew.get(current);
-            newNode.next = oldToNew.get(current.next);
-            newNode.random = oldToNew.get(current.random);
-            current = current.next;
-        }
-        
-        return oldToNew.get(head);
+    
+    // Second pass: assign next and random pointers
+    current = head;
+    while (current != null) {
+        map.get(current).next = map.get(current.next);
+        map.get(current).random = map.get(current.random);
+        current = current.next;
     }
+    
+    return map.get(head);
 }`,
-    bruteForceComplexity: {
-      time: "O(n)",
-      space: "O(n)",
-      reasoning:
-        "Three passes through list: create nodes, set next pointers, set random pointers.",
-    },
-    optimalComplexity: {
-      time: "O(n)",
-      space: "O(n)",
-      reasoning:
-        "Two passes: create all new nodes in HashMap, then set both next and random pointers.",
-    },
-    leetcodeUrl: "https://leetcode.com/problems/copy-list-with-random-pointer/",
+        timeComplexity: "O(n)",
+        spaceComplexity: "O(n)",
+        explanation: "We use a hash map to store the mapping between original nodes and their copies. Then we set the pointers in two passes."
+      },
+      {
+        approach: "Optimal",
+        code: `public Node copyRandomList(Node head) {
+    if (head == null) return null;
+    
+    // First pass: create new nodes
+    Node current = head;
+    while (current != null) {
+        Node copy = new Node(current.val);
+        copy.next = current.next;
+        current.next = copy;
+        current = copy.next;
+    }
+    
+    // Second pass: assign random pointers
+    current = head;
+    while (current != null) {
+        if (current.random != null) {
+            current.next.random = current.random.next;
+        }
+        current = current.next.next;
+    }
+    
+    // Third pass: restore original list and extract copy
+    current = head;
+    Node dummy = new Node(0);
+    Node copyTail = dummy;
+    
+    while (current != null) {
+        Node next = current.next.next;
+        Node copy = current.next;
+        
+        copyTail.next = copy;
+        copyTail = copy;
+        
+        current.next = next;
+        current = next;
+    }
+    
+    return dummy.next;
+}`,
+        timeComplexity: "O(n)",
+        spaceComplexity: "O(1)",
+        explanation: "We interweave the copied list with the original list, then use the interweaved structure to set random pointers, and finally separate the two lists."
+      }
+    ],
+    leetCodeUrl: "https://leetcode.com/problems/copy-list-with-random-pointer/",
+    difficulty: "Medium",
+    category: "linkedList"
   },
   {
-    id: "add-two-numbers",
+    id: 43,
     title: "Add Two Numbers",
-    description:
-      "You are given two non-empty linked lists representing two non-negative integers. The digits are stored in reverse order, and each of their nodes contains a single digit. Add the two numbers and return the sum as a linked list.\n\nYou may assume the two numbers do not contain any leading zero, except the number 0 itself.",
-    difficulty: "Medium",
-    tags: ["Linked List", "Math", "Recursion"],
+    description: "You are given two non-empty linked lists representing two non-negative integers. The digits are stored in reverse order, and each of their nodes contains a single digit. Add the two numbers and return the sum as a linked list.",
     examples: [
       {
         input: "l1 = [2,4,3], l2 = [5,6,4]",
         output: "[7,0,8]",
-        explanation: "342 + 465 = 807.",
+        explanation: "342 + 465 = 807."
       },
       {
         input: "l1 = [0], l2 = [0]",
-        output: "[0]",
-      },
+        output: "[0]"
+      }
     ],
-    bruteForceSolution: `class Solution {
-    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
-        // Convert linked lists to numbers
-        long num1 = 0, num2 = 0;
-        long multiplier = 1;
-        
-        while (l1 != null) {
-            num1 += l1.val * multiplier;
-            multiplier *= 10;
-            l1 = l1.next;
-        }
-        
-        multiplier = 1;
-        while (l2 != null) {
-            num2 += l2.val * multiplier;
-            multiplier *= 10;
-            l2 = l2.next;
-        }
-        
-        long sum = num1 + num2;
-        
-        // Convert sum back to linked list
-        if (sum == 0) return new ListNode(0);
-        
-        ListNode dummy = new ListNode(0);
-        ListNode current = dummy;
-        
-        while (sum > 0) {
-            current.next = new ListNode((int)(sum % 10));
-            sum /= 10;
-            current = current.next;
-        }
-        
-        return dummy.next;
+    solutions: [
+      {
+        approach: "Brute Force",
+        code: `public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+    long num1 = 0, num2 = 0;
+    int power = 0;
+    
+    ListNode current = l1;
+    while (current != null) {
+        num1 += current.val * Math.pow(10, power++);
+        current = current.next;
     }
-}`,
-    optimalSolution: `class Solution {
-    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
-        ListNode dummy = new ListNode(0);
-        ListNode current = dummy;
-        int carry = 0;
-        
-        while (l1 != null || l2 != null || carry != 0) {
-            int val1 = (l1 != null) ? l1.val : 0;
-            int val2 = (l2 != null) ? l2.val : 0;
-            
-            int sum = val1 + val2 + carry;
-            carry = sum / 10;
-            
-            current.next = new ListNode(sum % 10);
-            current = current.next;
-            
-            if (l1 != null) l1 = l1.next;
-            if (l2 != null) l2 = l2.next;
-        }
-        
-        return dummy.next;
+    
+    power = 0;
+    current = l2;
+    while (current != null) {
+        num2 += current.val * Math.pow(10, power++);
+        current = current.next;
     }
+    
+    long sum = num1 + num2;
+    
+    ListNode dummy = new ListNode(0);
+    current = dummy;
+    
+    if (sum == 0) return new ListNode(0);
+    
+    while (sum > 0) {
+        current.next = new ListNode((int)(sum % 10));
+        sum /= 10;
+        current = current.next;
+    }
+    
+    return dummy.next;
 }`,
-    bruteForceComplexity: {
-      time: "O(max(m, n))",
-      space: "O(max(m, n))",
-      reasoning:
-        "Convert to numbers (risk of overflow), add, then convert back to linked list.",
-    },
-    optimalComplexity: {
-      time: "O(max(m, n))",
-      space: "O(max(m, n))",
-      reasoning:
-        "Single pass with carry propagation, handles arbitrary length numbers safely.",
-    },
-    leetcodeUrl: "https://leetcode.com/problems/add-two-numbers/",
+        timeComplexity: "O(max(n,m))",
+        spaceComplexity: "O(max(n,m))",
+        explanation: "We convert the linked lists to numbers, add them, and create a new linked list from the sum."
+      },
+      {
+        approach: "Optimal",
+        code: `public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+    ListNode dummy = new ListNode(0);
+    ListNode current = dummy;
+    int carry = 0;
+    
+    while (l1 != null || l2 != null || carry != 0) {
+        int x = (l1 != null) ? l1.val : 0;
+        int y = (l2 != null) ? l2.val : 0;
+        int sum = x + y + carry;
+        
+        carry = sum / 10;
+        current.next = new ListNode(sum % 10);
+        current = current.next;
+        
+        if (l1 != null) l1 = l1.next;
+        if (l2 != null) l2 = l2.next;
+    }
+    
+    return dummy.next;
+}`,
+        timeComplexity: "O(max(n,m))",
+        spaceComplexity: "O(max(n,m))",
+        explanation: "We traverse both lists simultaneously, adding digits and keeping track of the carry."
+      }
+    ],
+    leetCodeUrl: "https://leetcode.com/problems/add-two-numbers/",
+    difficulty: "Medium",
+    category: "linkedList"
   },
   {
-    id: "linked-list-cycle",
+    id: 44,
     title: "Linked List Cycle",
-    description:
-      "Given head, the head of a linked list, determine if the linked list has a cycle in it.\n\nThere is a cycle in a linked list if there is some node in the list that can be reached again by continuously following the next pointer. Internally, pos is used to denote the index of the node that tail's next pointer is connected to. Note that pos is not passed as a parameter.\n\nReturn true if there is a cycle in the linked list. Otherwise, return false.",
-    difficulty: "Easy",
-    tags: ["Hash Table", "Linked List", "Two Pointers"],
+    description: "Given head, the head of a linked list, determine if the linked list has a cycle in it. There is a cycle in a linked list if there is some node in the list that can be reached again by continuously following the next pointer.",
     examples: [
       {
         input: "head = [3,2,0,-4], pos = 1",
         output: "true",
-        explanation:
-          "There is a cycle in the linked list, where the tail connects to the 1st node (0-indexed).",
+        explanation: "There is a cycle in the linked list, where the tail connects to the 1st node (0-indexed)."
       },
       {
-        input: "head = [1], pos = -1",
-        output: "false",
-        explanation: "There is no cycle in the linked list.",
-      },
+        input: "head = [1,2], pos = 0",
+        output: "true",
+        explanation: "There is a cycle in the linked list, where the tail connects to the 0th node."
+      }
     ],
-    bruteForceSolution: `class Solution {
-    public boolean hasCycle(ListNode head) {
-        Set<ListNode> visited = new HashSet<>();
-        
-        ListNode current = head;
-        while (current != null) {
-            if (visited.contains(current)) {
-                return true;
-            }
-            visited.add(current);
-            current = current.next;
+    solutions: [
+      {
+        approach: "Brute Force",
+        code: `public boolean hasCycle(ListNode head) {
+    Set<ListNode> seen = new HashSet<>();
+    ListNode current = head;
+    
+    while (current != null) {
+        if (seen.contains(current)) {
+            return true;
         }
-        
+        seen.add(current);
+        current = current.next;
+    }
+    
+    return false;
+}`,
+        timeComplexity: "O(n)",
+        spaceComplexity: "O(n)",
+        explanation: "We use a hash set to keep track of nodes we've seen. If we encounter a node we've seen before, there's a cycle."
+      },
+      {
+        approach: "Optimal",
+        code: `public boolean hasCycle(ListNode head) {
+    if (head == null || head.next == null) {
         return false;
     }
-}`,
-    optimalSolution: `class Solution {
-    public boolean hasCycle(ListNode head) {
-        if (head == null || head.next == null) return false;
+    
+    ListNode slow = head;
+    ListNode fast = head;
+    
+    while (fast != null && fast.next != null) {
+        slow = slow.next;
+        fast = fast.next.next;
         
-        ListNode slow = head;
-        ListNode fast = head.next;
-        
-        while (fast != null && fast.next != null) {
-            if (slow == fast) {
-                return true;
-            }
-            slow = slow.next;
-            fast = fast.next.next;
+        if (slow == fast) {
+            return true;
         }
-        
-        return false;
     }
+    
+    return false;
 }`,
-    bruteForceComplexity: {
-      time: "O(n)",
-      space: "O(n)",
-      reasoning: "Use HashSet to track visited nodes, requires extra space.",
-    },
-    optimalComplexity: {
-      time: "O(n)",
-      space: "O(1)",
-      reasoning:
-        "Floyd's cycle detection with slow and fast pointers, constant space.",
-    },
-    leetcodeUrl: "https://leetcode.com/problems/linked-list-cycle/",
+        timeComplexity: "O(n)",
+        spaceComplexity: "O(1)",
+        explanation: "We use Floyd's Cycle-Finding Algorithm (tortoise and hare). If there's a cycle, the fast pointer will eventually catch up to the slow pointer."
+      }
+    ],
+    leetCodeUrl: "https://leetcode.com/problems/linked-list-cycle/",
+    difficulty: "Easy",
+    category: "linkedList"
   },
   {
-    id: "find-the-duplicate-number",
+    id: 45,
     title: "Find the Duplicate Number",
-    description:
-      "Given an array of integers nums containing n + 1 integers where each integer is in the range [1, n] inclusive.\n\nThere is only one repeated number in nums, return this repeated number.\n\nYou must solve the problem without modifying the array nums and uses only constant extra space.",
-    difficulty: "Medium",
-    tags: ["Array", "Two Pointers", "Binary Search", "Bit Manipulation"],
+    description: "Given an array of integers nums containing n + 1 integers where each integer is in the range [1, n] inclusive. There is only one repeated number in nums, return this repeated number. You must solve the problem without modifying the array nums and uses only constant extra space.",
     examples: [
       {
         input: "nums = [1,3,4,2,2]",
-        output: "2",
+        output: "2"
       },
       {
         input: "nums = [3,1,3,4,2]",
-        output: "3",
-      },
+        output: "3"
+      }
     ],
-    bruteForceSolution: `class Solution {
-    public int findDuplicate(int[] nums) {
-        // Try each number and count occurrences
-        for (int i = 1; i < nums.length; i++) {
-            int count = 0;
-            for (int num : nums) {
-                if (num == i) {
-                    count++;
-                }
-            }
-            if (count > 1) {
-                return i;
-            }
+    solutions: [
+      {
+        approach: "Brute Force",
+        code: `public int findDuplicate(int[] nums) {
+    Arrays.sort(nums);
+    for (int i = 1; i < nums.length; i++) {
+        if (nums[i] == nums[i-1]) {
+            return nums[i];
         }
-        return -1;
     }
+    return -1;
 }`,
-    optimalSolution: `class Solution {
-    public int findDuplicate(int[] nums) {
-        // Floyd's cycle detection algorithm
-        int slow = nums[0];
-        int fast = nums[0];
-        
-        // Phase 1: Find intersection point in cycle
-        do {
-            slow = nums[slow];
-            fast = nums[nums[fast]];
-        } while (slow != fast);
-        
-        // Phase 2: Find entrance to cycle
-        slow = nums[0];
-        while (slow != fast) {
-            slow = nums[slow];
-            fast = nums[fast];
-        }
-        
-        return slow;
+        timeComplexity: "O(n log n)",
+        spaceComplexity: "O(1)",
+        explanation: "We sort the array and look for adjacent equal numbers."
+      },
+      {
+        approach: "Optimal",
+        code: `public int findDuplicate(int[] nums) {
+    int slow = nums[0];
+    int fast = nums[0];
+    
+    // Find intersection point
+    do {
+        slow = nums[slow];
+        fast = nums[nums[fast]];
+    } while (slow != fast);
+    
+    // Find entrance to cycle
+    slow = nums[0];
+    while (slow != fast) {
+        slow = nums[slow];
+        fast = nums[fast];
     }
+    
+    return slow;
 }`,
-    bruteForceComplexity: {
-      time: "O(n²)",
-      space: "O(1)",
-      reasoning: "For each possible duplicate, count its occurrences in array.",
-    },
-    optimalComplexity: {
-      time: "O(n)",
-      space: "O(1)",
-      reasoning:
-        "Treat array as linked list, use Floyd's algorithm to detect cycle.",
-    },
-    leetcodeUrl: "https://leetcode.com/problems/find-the-duplicate-number/",
+        timeComplexity: "O(n)",
+        spaceComplexity: "O(1)",
+        explanation: "We treat the array as a linked list where nums[i] points to nums[nums[i]]. The duplicate number will create a cycle, which we can find using Floyd's algorithm."
+      }
+    ],
+    leetCodeUrl: "https://leetcode.com/problems/find-the-duplicate-number/",
+    difficulty: "Medium",
+    category: "linkedList"
   },
   {
-    id: "lru-cache",
+    id: 46,
     title: "LRU Cache",
-    description:
-      "Design a data structure that follows the constraints of a Least Recently Used (LRU) cache.\n\nImplement the LRUCache class:\n\n- LRUCache(int capacity) Initialize the LRU cache with positive size capacity.\n- int get(int key) Return the value of the key if the key exists, otherwise return -1.\n- void put(int key, int value) Update the value of the key if the key exists. Otherwise, add the key-value pair to the cache. If the number of keys exceeds the capacity from this operation, evict the least recently used key.\n\nThe functions get and put must each run in O(1) average time complexity.",
-    difficulty: "Medium",
-    tags: ["Hash Table", "Linked List", "Design", "Doubly-Linked List"],
+    description: "Design a data structure that follows the constraints of a Least Recently Used (LRU) cache. Implement the LRUCache class: LRUCache(int capacity) Initialize the LR U cache with positive size capacity. int get(int key) Return the value of the key if the key exists, otherwise return -1. void put(int key, int value) Update the value of the key if the key exists. Otherwise, add the key-value pair to the cache. If the number of keys exceeds the capacity from this operation, evict the least recently used key.",
     examples: [
       {
-        input:
-          '["LRUCache", "put", "put", "get", "put", "get", "put", "get", "get", "get"]\n[[2], [1, 1], [2, 2], [1], [3, 3], [2], [4, 4], [1], [3], [4]]',
+        input: `["LRUCache", "put", "put", "get", "put", "get", "put", "get", "get", "get"]
+[[2], [1, 1], [2, 2], [1], [3, 3], [2], [4, 4], [1], [3], [4]]`,
         output: "[null, null, null, 1, null, -1, null, -1, 3, 4]",
-        explanation:
-          "LRUCache lRUCache = new LRUCache(2);\nlRUCache.put(1, 1); // cache is {1=1}\nlRUCache.put(2, 2); // cache is {1=1, 2=2}\nlRUCache.get(1);    // return 1\nlRUCache.put(3, 3); // LRU key was 2, evicts key 2, cache is {1=1, 3=3}\nlRUCache.get(2);    // returns -1 (not found)\nlRUCache.put(4, 4); // LRU key was 1, evicts key 1, cache is {4=4, 3=3}\nlRUCache.get(1);    // return -1 (not found)\nlRUCache.get(3);    // return 3\nlRUCache.get(4);    // return 4",
-      },
+        explanation: "Cache is initialized with capacity = 2."
+      }
     ],
-    bruteForceSolution: `class LRUCache {
+    solutions: [
+      {
+        approach: "Brute Force",
+        code: `class LRUCache {
     private int capacity;
-    private List<int[]> cache; // [key, value, timestamp]
-    private int time;
+    private LinkedHashMap<Integer, Integer> cache;
     
     public LRUCache(int capacity) {
         this.capacity = capacity;
-        this.cache = new ArrayList<>();
-        this.time = 0;
+        this.cache = new LinkedHashMap<>(capacity, 0.75f, true);
     }
     
     public int get(int key) {
-        for (int[] entry : cache) {
-            if (entry[0] == key) {
-                entry[2] = ++time; // Update timestamp
-                return entry[1];
-            }
-        }
-        return -1;
+        return cache.getOrDefault(key, -1);
     }
     
     public void put(int key, int value) {
-        // Check if key exists
-        for (int[] entry : cache) {
-            if (entry[0] == key) {
-                entry[1] = value;
-                entry[2] = ++time;
-                return;
-            }
+        cache.put(key, value);
+        if (cache.size() > capacity) {
+            int firstKey = cache.keySet().iterator().next();
+            cache.remove(firstKey);
         }
-        
-        // Add new entry
-        if (cache.size() >= capacity) {
-            // Remove LRU entry
-            int minTime = Integer.MAX_VALUE;
-            int lruIndex = 0;
-            for (int i = 0; i < cache.size(); i++) {
-                if (cache.get(i)[2] < minTime) {
-                    minTime = cache.get(i)[2];
-                    lruIndex = i;
-                }
-            }
-            cache.remove(lruIndex);
-        }
-        
-        cache.add(new int[]{key, value, ++time});
     }
 }`,
-    optimalSolution: `class LRUCache {
+        timeComplexity: "O(1) average",
+        spaceComplexity: "O(capacity)",
+        explanation: "We use LinkedHashMap which maintains insertion order. Setting accessOrder to true makes it maintain access order instead."
+      },
+      {
+        approach: "Optimal",
+        code: `class LRUCache {
     class Node {
-        int key, value;
-        Node prev, next;
+        int key;
+        int value;
+        Node prev;
+        Node next;
+        
         Node(int key, int value) {
             this.key = key;
             this.value = value;
         }
     }
     
+    private Map<Integer, Node> cache;
     private int capacity;
-    private Map<Integer, Node> map;
-    private Node head, tail;
+    private Node head;
+    private Node tail;
     
     public LRUCache(int capacity) {
         this.capacity = capacity;
-        this.map = new HashMap<>();
-        
-        // Create dummy head and tail
-        head = new Node(0, 0);
-        tail = new Node(0, 0);
+        this.cache = new HashMap<>();
+        this.head = new Node(0, 0);
+        this.tail = new Node(0, 0);
         head.next = tail;
         tail.prev = head;
     }
     
     public int get(int key) {
-        Node node = map.get(key);
-        if (node == null) return -1;
-        
-        // Move to head (most recently used)
-        moveToHead(node);
-        return node.value;
+        if (cache.containsKey(key)) {
+            Node node = cache.get(key);
+            removeNode(node);
+            addNode(node);
+            return node.value;
+        }
+        return -1;
     }
     
     public void put(int key, int value) {
-        Node node = map.get(key);
+        if (cache.containsKey(key)) {
+            removeNode(cache.get(key));
+        }
         
-        if (node != null) {
-            // Update existing node
-            node.value = value;
-            moveToHead(node);
-        } else {
-            // Add new node
-            node = new Node(key, value);
-            
-            if (map.size() >= capacity) {
-                // Remove LRU node
-                Node lru = tail.prev;
-                removeNode(lru);
-                map.remove(lru.key);
-            }
-            
-            addToHead(node);
-            map.put(key, node);
+        Node node = new Node(key, value);
+        cache.put(key, node);
+        addNode(node);
+        
+        if (cache.size() > capacity) {
+            Node lru = head.next;
+            removeNode(lru);
+            cache.remove(lru.key);
         }
     }
     
+    private void addNode(Node node) {
+        Node prev = tail.prev;
+        prev.next = node;
+        node.prev = prev;
+        node.next = tail;
+        tail.prev = node;
+    }
+    
     private void removeNode(Node node) {
-        node.prev.next = node.next;
-        node.next.prev = node.prev;
-    }
-    
-    private void addToHead(Node node) {
-        node.prev = head;
-        node.next = head.next;
-        head.next.prev = node;
-        head.next = node;
-    }
-    
-    private void moveToHead(Node node) {
-        removeNode(node);
-        addToHead(node);
+        Node prev = node.prev;
+        Node next = node.next;
+        prev.next = next;
+        next.prev = prev;
     }
 }`,
-    bruteForceComplexity: {
-      time: "O(n) for both get and put",
-      space: "O(capacity)",
-      reasoning: "Linear search through list to find keys and LRU entries.",
-    },
-    optimalComplexity: {
-      time: "O(1) for both get and put",
-      space: "O(capacity)",
-      reasoning:
-        "HashMap for O(1) lookup, doubly-linked list for O(1) insertion/deletion.",
-    },
-    leetcodeUrl: "https://leetcode.com/problems/lru-cache/",
+        timeComplexity: "O(1) for all operations",
+        spaceComplexity: "O(capacity)",
+        explanation: "We implement our own doubly linked list with a hash map. The linked list maintains the order of elements, while the hash map provides O(1) access."
+      }
+    ],
+    leetCodeUrl: "https://leetcode.com/problems/lru-cache/",
+    difficulty: "Medium",
+    category: "linkedList"
   },
   {
-    id: "merge-k-sorted-lists",
+    id: 47,
     title: "Merge k Sorted Lists",
-    description:
-      "You are given an array of k linked-lists lists, each linked-list is sorted in ascending order.\n\nMerge all the linked-lists into one sorted linked-list and return it.",
-    difficulty: "Hard",
-    tags: [
-      "Linked List",
-      "Divide and Conquer",
-      "Heap (Priority Queue)",
-      "Merge Sort",
-    ],
+    description: "You are given an array of k linked-lists lists, each linked-list is sorted in ascending order. Merge all the linked-lists into one sorted linked-list and return it.",
     examples: [
       {
         input: "lists = [[1,4,5],[1,3,4],[2,6]]",
         output: "[1,1,2,3,4,4,5,6]",
-        explanation:
-          "The linked-lists are:\n[\n  1->4->5,\n  1->3->4,\n  2->6\n]\nmerging them into one sorted list:\n1->1->2->3->4->4->5->6",
+        explanation: "The linked-lists are merged into one sorted list."
       },
       {
         input: "lists = []",
-        output: "[]",
-      },
+        output: "[]"
+      }
     ],
-    bruteForceSolution: `class Solution {
-    public ListNode mergeKLists(ListNode[] lists) {
-        List<Integer> values = new ArrayList<>();
-        
-        // Collect all values
-        for (ListNode list : lists) {
-            ListNode current = list;
-            while (current != null) {
-                values.add(current.val);
-                current = current.next;
-            }
-        }
-        
-        // Sort all values
-        Collections.sort(values);
-        
-        // Build new sorted list
-        ListNode dummy = new ListNode(0);
-        ListNode current = dummy;
-        
-        for (int val : values) {
-            current.next = new ListNode(val);
+    solutions: [
+      {
+        approach: "Brute Force",
+        code: `public ListNode mergeKLists(ListNode[] lists) {
+    List<Integer> values = new ArrayList<>();
+    
+    for (ListNode list : lists) {
+        ListNode current = list;
+        while (current != null) {
+            values.add(current.val);
             current = current.next;
         }
-        
-        return dummy.next;
-    }
-}`,
-    optimalSolution: `class Solution {
-    public ListNode mergeKLists(ListNode[] lists) {
-        if (lists == null || lists.length == 0) return null;
-        
-        while (lists.length > 1) {
-            List<ListNode> mergedLists = new ArrayList<>();
-            
-            for (int i = 0; i < lists.length; i += 2) {
-                ListNode l1 = lists[i];
-                ListNode l2 = (i + 1 < lists.length) ? lists[i + 1] : null;
-                mergedLists.add(mergeTwoLists(l1, l2));
-            }
-            
-            lists = mergedLists.toArray(new ListNode[0]);
-        }
-        
-        return lists[0];
     }
     
-    private ListNode mergeTwoLists(ListNode l1, ListNode l2) {
-        ListNode dummy = new ListNode(0);
-        ListNode current = dummy;
-        
-        while (l1 != null && l2 != null) {
-            if (l1.val <= l2.val) {
-                current.next = l1;
-                l1 = l1.next;
-            } else {
-                current.next = l2;
-                l2 = l2.next;
-            }
-            current = current.next;
-        }
-        
-        current.next = (l1 != null) ? l1 : l2;
-        return dummy.next;
+    Collections.sort(values);
+    
+    ListNode dummy = new ListNode(0);
+    ListNode current = dummy;
+    for (int val : values) {
+        current.next = new ListNode(val);
+        current = current.next;
     }
+    
+    return dummy.next;
 }`,
-    bruteForceComplexity: {
-      time: "O(N log N)",
-      space: "O(N)",
-      reasoning: "Collect all N values, sort them, then rebuild list.",
-    },
-    optimalComplexity: {
-      time: "O(N log k)",
-      space: "O(1)",
-      reasoning:
-        "Divide and conquer: repeatedly merge pairs of lists, log k levels of merging.",
-    },
-    leetcodeUrl: "https://leetcode.com/problems/merge-k-sorted-lists/",
-  },
+        timeComplexity: "O(N log N) where N is total number of nodes",
+        spaceComplexity: "O(N)",
+        explanation: "We collect all values in an array, sort them, and create a new linked list."
+      },
+      {
+        approach: "Optimal",
+        code: `public ListNode mergeKLists(ListNode[] lists) {
+    if (lists == null || lists.length == 0) return null;
+    
+    PriorityQueue<ListNode> queue = new PriorityQueue<>((a, b) -> a.val - b.val);
+    
+    // Add first node from each list
+    for (ListNode list : lists) {
+        if (list != null) {
+            queue.offer(list);
+        }
+    }
+    
+    ListNode dummy = new ListNode(0);
+    ListNode tail = dummy;
+    
+    while (!queue.isEmpty()) {
+        ListNode node = queue.poll();
+        tail.next = node;
+        tail = tail.next;
+        
+        if (node.next != null) {
+            queue.offer(node.next);
+        }
+    }
+    
+    return dummy.next;
+}`,
+        timeComplexity: "O(N log k) where k is number of lists",
+        spaceComplexity: "O(k)",
+        explanation: "We use a min heap to always get the smallest value among the current nodes from each list."
+      }
+    ],
+    leetCodeUrl: "https://leetcode.com/problems/merge-k-sorted-lists/",
+    difficulty: "Hard",
+    category: "linkedList"
+  }
 ];

@@ -1,11 +1,10 @@
-import { Question } from "../types";
+import { Question } from '../types';
 
 export const binarySearchQuestions: Question[] = [
   {
-    id:31
+    id: 31,
     title: "Binary Search",
-    description: "Given an array of integers nums which is sorted in ascending order, and an integer target, write a function to search target in nums. If target exists, then return its index. Otherwise, return -1.\n\nYou must write an algorithm with O(log n) runtime complexity.",
-    difficulty: "Easy",
+    description: "Given an array of integers nums which is sorted in ascending order, and a target integer target, write a function to search target in nums. If target exists, then return its index. Otherwise, return -1.",
     examples: [
       {
         input: "nums = [-1,0,3,5,9,12], target = 9",
@@ -18,118 +17,123 @@ export const binarySearchQuestions: Question[] = [
         explanation: "2 does not exist in nums so return -1"
       }
     ],
-    bruteForceSolution: `class Solution {
-    public int search(int[] nums, int target) {
-        // Linear search
-        for (int i = 0; i < nums.length; i++) {
-            if (nums[i] == target) {
-                return i;
-            }
+    solutions: [
+      {
+        approach: "Brute Force",
+        code: `public int search(int[] nums, int target) {
+    for (int i = 0; i < nums.length; i++) {
+        if (nums[i] == target) {
+            return i;
         }
-        return -1;
     }
+    return -1;
 }`,
-    optimalSolution: `class Solution {
-    public int search(int[] nums, int target) {
-        int left = 0;
-        int right = nums.length - 1;
+        timeComplexity: "O(n)",
+        spaceComplexity: "O(1)",
+        explanation: "We linearly search through the array to find the target."
+      },
+      {
+        approach: "Optimal",
+        code: `public int search(int[] nums, int target) {
+    int left = 0;
+    int right = nums.length - 1;
+    
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
         
-        while (left <= right) {
-            int mid = left + (right - left) / 2;
-            
-            if (nums[mid] == target) {
-                return mid;
-            } else if (nums[mid] < target) {
-                left = mid + 1;
-            } else {
-                right = mid - 1;
-            }
+        if (nums[mid] == target) {
+            return mid;
+        } else if (nums[mid] < target) {
+            left = mid + 1;
+        } else {
+            right = mid - 1;
         }
-        
-        return -1;
     }
+    
+    return -1;
 }`,
-    bruteForceComplexity: {
-      time: "O(n)",
-      space: "O(1)",
-      reasoning: "Linear scan through entire array to find target."
-    },
-    optimalComplexity: {
-      time: "O(log n)",
-      space: "O(1)",
-      reasoning: "Binary search divides search space in half at each step."
-    },
-    leetcodeUrl: "https://leetcode.com/problems/binary-search/"
+        timeComplexity: "O(log n)",
+        spaceComplexity: "O(1)",
+        explanation: "We use binary search to repeatedly divide the search interval in half."
+      }
+    ],
+    leetCodeUrl: "https://leetcode.com/problems/binary-search/",
+    difficulty: "Easy",
+    category: "binarySearch"
   },
   {
-    id:31
+    id: 32,
     title: "Search a 2D Matrix",
-    description: "Write an efficient algorithm that searches for a value target in an m x n integer matrix matrix. This matrix has the following properties:\n\n- Integers in each row are sorted from left to right.\n- The first integer of each row is greater than the last integer of the previous row.",
-    difficulty: "Medium",
+    description: "Write an efficient algorithm that searches for a value target in an m x n integer matrix matrix. This matrix has the following properties: Integers in each row are sorted from left to right. The first integer of each row is greater than the last integer of the previous row.",
     examples: [
       {
-        input: "matrix = [[1,4,7,11],[2,5,8,12],[3,6,9,16]], target = 5",
+        input: `matrix = [[1,3,5,7],[10,11,16,20],[23,30,34,60]], target = 3`,
         output: "true"
       },
       {
-        input: "matrix = [[1,4,7,11],[2,5,8,12],[3,6,9,16]], target = 13",
+        input: `matrix = [[1,3,5,7],[10,11,16,20],[23,30,34,60]], target = 13`,
         output: "false"
       }
     ],
-    bruteForceSolution: `class Solution {
-    public boolean searchMatrix(int[][] matrix, int target) {
-        // Linear search through entire matrix
-        for (int[] row : matrix) {
-            for (int num : row) {
-                if (num == target) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-}`,
-    optimalSolution: `class Solution {
-    public boolean searchMatrix(int[][] matrix, int target) {
-        int m = matrix.length;
-        int n = matrix[0].length;
-        
-        int left = 0;
-        int right = m * n - 1;
-        
-        while (left <= right) {
-            int mid = left + (right - left) / 2;
-            int midValue = matrix[mid / n][mid % n];
-            
-            if (midValue == target) {
+    solutions: [
+      {
+        approach: "Brute Force",
+        code: `public boolean searchMatrix(int[][] matrix, int target) {
+    int m = matrix.length;
+    int n = matrix[0].length;
+    
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            if (matrix[i][j] == target) {
                 return true;
-            } else if (midValue < target) {
-                left = mid + 1;
-            } else {
-                right = mid - 1;
             }
         }
-        
-        return false;
     }
+    
+    return false;
 }`,
-    bruteForceComplexity: {
-      time: "O(m * n)",
-      space: "O(1)",
-      reasoning: "Check every element in the m x n matrix."
-    },
-    optimalComplexity: {
-      time: "O(log(m * n))",
-      space: "O(1)",
-      reasoning: "Treat 2D matrix as 1D sorted array and apply binary search."
-    },
-    leetcodeUrl: "https://leetcode.com/problems/search-a-2d-matrix/"
+        timeComplexity: "O(m*n)",
+        spaceComplexity: "O(1)",
+        explanation: "We search through each element in the matrix one by one."
+      },
+      {
+        approach: "Optimal",
+        code: `public boolean searchMatrix(int[][] matrix, int target) {
+    int m = matrix.length;
+    int n = matrix[0].length;
+    int left = 0;
+    int right = m * n - 1;
+    
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        int row = mid / n;
+        int col = mid % n;
+        int value = matrix[row][col];
+        
+        if (value == target) {
+            return true;
+        } else if (value < target) {
+            left = mid + 1;
+        } else {
+            right = mid - 1;
+        }
+    }
+    
+    return false;
+}`,
+        timeComplexity: "O(log(m*n))",
+        spaceComplexity: "O(1)",
+        explanation: "We treat the 2D matrix as a sorted 1D array and perform binary search. We convert the mid index back to 2D coordinates using division and modulo."
+      }
+    ],
+    leetCodeUrl: "https://leetcode.com/problems/search-a-2d-matrix/",
+    difficulty: "Medium",
+    category: "binarySearch"
   },
   {
-    id:31
+    id: 33,
     title: "Koko Eating Bananas",
-    description: "Koko loves to eat bananas. There are n piles of bananas, the ith pile has piles[i] bananas. The guards have gone and will come back in h hours.\n\nKoko can decide her bananas-per-hour eating speed of k. Each hour, she chooses some pile of bananas and eats k bananas from that pile. If the pile has less than k bananas, she eats all of them for that hour and will not eat any more bananas during that hour.\n\nKoko likes to eat slowly but wants to finish eating all the bananas before the guards come back.\n\nReturn the minimum integer k such that she can eat all the bananas within h hours.",
-    difficulty: "Medium",
+    description: "Koko loves to eat bananas. There are n piles of bananas, the ith pile has piles[i] bananas. The guards have gone and will come back in h hours. Koko can decide her bananas-per-hour eating speed of k. Each hour, she chooses some pile of bananas and eats k bananas from that pile. If the pile has less than k bananas, she eats all of them instead and will not eat any more bananas during this hour. Return the minimum integer k such that she can eat all the bananas within h hours.",
     examples: [
       {
         input: "piles = [3,6,7,11], h = 8",
@@ -140,131 +144,127 @@ export const binarySearchQuestions: Question[] = [
         output: "30"
       }
     ],
-    bruteForceSolution: `class Solution {
-    public int minEatingSpeed(int[] piles, int h) {
-        // Try eating speeds from 1 to max pile size
-        int maxPile = Arrays.stream(piles).max().getAsInt();
-        
-        for (int k = 1; k <= maxPile; k++) {
-            if (canFinish(piles, h, k)) {
-                return k;
-            }
-        }
-        
-        return maxPile;
+    solutions: [
+      {
+        approach: "Brute Force",
+        code: `public int minEatingSpeed(int[] piles, int h) {
+    int maxPile = 0;
+    for (int pile : piles) {
+        maxPile = Math.max(maxPile, pile);
     }
     
-    private boolean canFinish(int[] piles, int h, int k) {
+    for (int k = 1; k <= maxPile; k++) {
         int hours = 0;
         for (int pile : piles) {
-            hours += (pile + k - 1) / k; // Ceiling division
+            hours += (pile + k - 1) / k;
         }
-        return hours <= h;
-    }
-}`,
-    optimalSolution: `class Solution {
-    public int minEatingSpeed(int[] piles, int h) {
-        int left = 1;
-        int right = Arrays.stream(piles).max().getAsInt();
-        
-        while (left < right) {
-            int mid = left + (right - left) / 2;
-            
-            if (canFinish(piles, h, mid)) {
-                right = mid;
-            } else {
-                left = mid + 1;
-            }
+        if (hours <= h) {
+            return k;
         }
-        
-        return left;
     }
     
-    private boolean canFinish(int[] piles, int h, int k) {
-        int hours = 0;
-        for (int pile : piles) {
-            hours += (pile + k - 1) / k; // Ceiling division
-            if (hours > h) return false; // Early termination
-        }
-        return true;
-    }
+    return maxPile;
 }`,
-    bruteForceComplexity: {
-      time: "O(max(piles) * n)",
-      space: "O(1)",
-      reasoning: "Try each possible eating speed from 1 to maximum pile size."
-    },
-    optimalComplexity: {
-      time: "O(n * log(max(piles)))",
-      space: "O(1)",
-      reasoning: "Binary search on eating speed, check feasibility for each candidate."
-    },
-    leetcodeUrl: "https://leetcode.com/problems/koko-eating-bananas/"
+        timeComplexity: "O(n*maxPile)",
+        spaceComplexity: "O(1)",
+        explanation: "We try every possible eating speed from 1 to the maximum pile size."
+      },
+      {
+        approach: "Optimal",
+        code: `public int minEatingSpeed(int[] piles, int h) {
+    int left = 1;
+    int right = 1;
+    for (int pile : piles) {
+        right = Math.max(right, pile);
+    }
+    
+    while (left < right) {
+        int mid = left + (right - left) / 2;
+        int hours = 0;
+        
+        for (int pile : piles) {
+            hours += (pile + mid - 1) / mid;
+        }
+        
+        if (hours <= h) {
+            right = mid;
+        } else {
+            left = mid + 1;
+        }
+    }
+    
+    return left;
+}`,
+        timeComplexity: "O(n*log(maxPile))",
+        spaceComplexity: "O(1)",
+        explanation: "We use binary search to find the minimum eating speed. For each speed, we calculate if Koko can eat all bananas within h hours."
+      }
+    ],
+    leetCodeUrl: "https://leetcode.com/problems/koko-eating-bananas/",
+    difficulty: "Medium",
+    category: "binarySearch"
   },
   {
-    id:31
+    id: 34,
     title: "Find Minimum in Rotated Sorted Array",
-    description: "Suppose an array of length n sorted in ascending order is rotated between 1 and n times. For example, the array nums = [0,1,2,4,5,6,7] might become:\n\n[4,5,6,7,0,1,2] if it was rotated 4 times.\n[0,1,2,4,5,6,7] if it was rotated 7 times.\n\nGiven the rotated sorted array nums of unique elements, return the minimum element of this array.\n\nYou must write an algorithm that runs in O(log n) time.",
-    difficulty: "Medium",
+    description: "Suppose an array of length n sorted in ascending order is rotated between 1 and n times. For example, the array nums = [0,1,2,4,5,6,7] might become [4,5,6,7,0,1,2]. Find the minimum element of this array.",
     examples: [
       {
         input: "nums = [3,4,5,1,2]",
-        output: "1"
+        output: "1",
+        explanation: "The original array was [1,2,3,4,5] rotated 3 times."
       },
       {
         input: "nums = [4,5,6,7,0,1,2]",
-        output: "0"
+        output: "0",
+        explanation: "The original array was [0,1,2,4,5,6,7] and it was rotated 4 times."
       }
     ],
-    bruteForceSolution: `class Solution {
-    public int findMin(int[] nums) {
-        int min = nums[0];
-        
-        // Linear search for minimum
-        for (int num : nums) {
-            min = Math.min(min, num);
-        }
-        
-        return min;
+    solutions: [
+      {
+        approach: "Brute Force",
+        code: `public int findMin(int[] nums) {
+    int min = nums[0];
+    for (int i = 1; i < nums.length; i++) {
+        min = Math.min(min, nums[i]);
     }
+    return min;
 }`,
-    optimalSolution: `class Solution {
-    public int findMin(int[] nums) {
-        int left = 0;
-        int right = nums.length - 1;
+        timeComplexity: "O(n)",
+        spaceComplexity: "O(1)",
+        explanation: "We simply iterate through the array to find the minimum element."
+      },
+      {
+        approach: "Optimal",
+        code: `public int findMin(int[] nums) {
+    int left = 0;
+    int right = nums.length - 1;
+    
+    while (left < right) {
+        int mid = left + (right - left) / 2;
         
-        while (left < right) {
-            int mid = left + (right - left) / 2;
-            
-            if (nums[mid] > nums[right]) {
-                // Minimum is in right half
-                left = mid + 1;
-            } else {
-                // Minimum is in left half (including mid)
-                right = mid;
-            }
+        if (nums[mid] > nums[right]) {
+            left = mid + 1;
+        } else {
+            right = mid;
         }
-        
-        return nums[left];
     }
+    
+    return nums[left];
 }`,
-    bruteForceComplexity: {
-      time: "O(n)",
-      space: "O(1)",
-      reasoning: "Linear scan through all elements to find minimum."
-    },
-    optimalComplexity: {
-      time: "O(log n)",
-      space: "O(1)",
-      reasoning: "Binary search by comparing middle element with rightmost to determine search direction."
-    },
-    leetcodeUrl: "https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/"
+        timeComplexity: "O(log n)",
+        spaceComplexity: "O(1)",
+        explanation: "We use binary search. If the middle element is greater than the rightmost element, the minimum must be in the right half. Otherwise, it must be in the left half (including the middle element)."
+      }
+    ],
+    leetCodeUrl: "https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/",
+    difficulty: "Medium",
+    category: "binarySearch"
   },
   {
-    id:31
+    id: 35,
     title: "Search in Rotated Sorted Array",
-    description: "There is an integer array nums sorted in ascending order (with distinct values).\n\nPrior to being passed to your function, nums is possibly rotated at an unknown pivot index k (1 <= k < nums.length) such that the resulting array is [nums[k], nums[k+1], ..., nums[n-1], nums[0], nums[1], ..., nums[k-1]] (0-indexed). For example, [0,1,2,4,5,6,7] might be rotated at pivot index 3 and become [4,5,6,7,0,1,2].\n\nGiven the array nums after the possible rotation and an integer target, return the index of target if it is in nums, or -1 if it is not in nums.\n\nYou must write an algorithm with O(log n) runtime complexity.",
-    difficulty: "Medium",
+    description: "There is an integer array nums sorted in ascending order (with distinct values). Prior to being passed to your function, nums is possibly rotated at an unknown pivot index k (1 <= k < nums.length). Given the array nums after the possible rotation and an integer target, return the index of target if it is in nums, or -1 if it is not in nums.",
     examples: [
       {
         input: "nums = [4,5,6,7,0,1,2], target = 0",
@@ -275,180 +275,147 @@ export const binarySearchQuestions: Question[] = [
         output: "-1"
       }
     ],
-    bruteForceSolution: `class Solution {
-    public int search(int[] nums, int target) {
-        // Linear search
-        for (int i = 0; i < nums.length; i++) {
-            if (nums[i] == target) {
-                return i;
-            }
-        }
-        return -1;
-    }
-}`,
-    optimalSolution: `class Solution {
-    public int search(int[] nums, int target) {
-        int left = 0;
-        int right = nums.length - 1;
-        
-        while (left <= right) {
-            int mid = left + (right - left) / 2;
-            
-            if (nums[mid] == target) {
-                return mid;
-            }
-            
-            // Determine which half is sorted
-            if (nums[left] <= nums[mid]) {
-                // Left half is sorted
-                if (target >= nums[left] && target < nums[mid]) {
-                    right = mid - 1;
-                } else {
-                    left = mid + 1;
-                }
-            } else {
-                // Right half is sorted
-                if (target > nums[mid] && target <= nums[right]) {
-                    left = mid + 1;
-                } else {
-                    right = mid - 1;
-                }
-            }
-        }
-        
-        return -1;
-    }
-}`,
-    bruteForceComplexity: {
-      time: "O(n)",
-      space: "O(1)",
-      reasoning: "Linear search through entire array."
-    },
-    optimalComplexity: {
-      time: "O(log n)",
-      space: "O(1)",
-      reasoning: "Modified binary search determining which half is sorted at each step."
-    },
-    leetcodeUrl: "https://leetcode.com/problems/search-in-rotated-sorted-array/"
-  },
-  {
-    id:31
-    title: "Time Based Key-Value Store",
-    description: "Design a time-based key-value data structure that can store multiple values for the same key at different time stamps and retrieve the key's value at a certain timestamp.\n\nImplement the TimeMap class:\n\n- TimeMap() Initializes the object of the data structure.\n- void set(String key, String value, int timestamp) Stores the key key with the value value at the given time timestamp.\n- String get(String key, int timestamp) Returns a value such that set was called previously, with timestamp_prev <= timestamp. If there are multiple such values, it returns the value associated with the largest timestamp_prev. If there are no values, it returns \"\".",
-    difficulty: "Medium",
-    examples: [
+    solutions: [
       {
-        input: '["TimeMap", "set", "get", "get", "set", "get", "get"]\n[[], ["foo", "bar", 1], ["foo", 1], ["foo", 3], ["foo", "bar2", 4], ["foo", 4], ["foo", 5]]',
-        output: '[null, null, "bar", "bar", null, "bar2", "bar2"]',
-        explanation: 'TimeMap timeMap = new TimeMap();\ntimeMap.set("foo", "bar", 1);  // store the key "foo" and value "bar" along with timestamp = 1.\ntimeMap.get("foo", 1);         // return "bar"\ntimeMap.get("foo", 3);         // return "bar", since there is no value corresponding to foo at timestamp 3 and timestamp 2, then the only value is at timestamp 1 is "bar".\ntimeMap.set("foo", "bar2", 4); // store the key "foo" and value "bar2" along with timestamp = 4.\ntimeMap.get("foo", 4);         // return "bar2"\ntimeMap.get("foo", 5);         // return "bar2"'
-      }
-    ],
-    bruteForceSolution: `class TimeMap {
-    private Map<String, List<Pair<Integer, String>>> map;
-    
-    public TimeMap() {
-        map = new HashMap<>();
+        approach: "Brute Force",
+        code: `public int search(int[] nums, int target) {
+    for (int i = 0; i < nums.length; i++) {
+        if (nums[i] == target) {
+            return i;
+        }
     }
+    return -1;
+}`,
+        timeComplexity: "O(n)",
+        spaceComplexity: "O(1)",
+        explanation: "We linearly search through the array to find the target."
+      },
+      {
+        approach: "Optimal",
+        code: `public int search(int[] nums, int target) {
+    int left = 0;
+    int right = nums.length - 1;
     
-    public void set(String key, String value, int timestamp) {
-        map.computeIfAbsent(key, k -> new ArrayList<>())
-           .add(new Pair<>(timestamp, value));
-    }
-    
-    public String get(String key, int timestamp) {
-        if (!map.containsKey(key)) return "";
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
         
-        List<Pair<Integer, String>> values = map.get(key);
-        String result = "";
+        if (nums[mid] == target) {
+            return mid;
+        }
         
-        // Linear search for largest timestamp <= given timestamp
-        for (Pair<Integer, String> pair : values) {
-            if (pair.getKey() <= timestamp) {
-                result = pair.getValue();
+        // Left half is sorted
+        if (nums[left] <= nums[mid]) {
+            if (target >= nums[left] && target < nums[mid]) {
+                right = mid - 1;
             } else {
-                break;
+                left = mid + 1;
             }
         }
-        
-        return result;
-    }
-    
-    static class Pair<K, V> {
-        private K key;
-        private V value;
-        
-        public Pair(K key, V value) {
-            this.key = key;
-            this.value = value;
-        }
-        
-        public K getKey() { return key; }
-        public V getValue() { return value; }
-    }
-}`,
-    optimalSolution: `class TimeMap {
-    private Map<String, List<Pair<Integer, String>>> map;
-    
-    public TimeMap() {
-        map = new HashMap<>();
-    }
-    
-    public void set(String key, String value, int timestamp) {
-        map.computeIfAbsent(key, k -> new ArrayList<>())
-           .add(new Pair<>(timestamp, value));
-    }
-    
-    public String get(String key, int timestamp) {
-        if (!map.containsKey(key)) return "";
-        
-        List<Pair<Integer, String>> values = map.get(key);
-        int left = 0;
-        int right = values.size() - 1;
-        String result = "";
-        
-        while (left <= right) {
-            int mid = left + (right - left) / 2;
-            if (values.get(mid).getKey() <= timestamp) {
-                result = values.get(mid).getValue();
+        // Right half is sorted
+        else {
+            if (target > nums[mid] && target <= nums[right]) {
                 left = mid + 1;
             } else {
                 right = mid - 1;
             }
         }
-        
-        return result;
     }
     
-    static class Pair<K, V> {
-        private K key;
-        private V value;
-        
-        public Pair(K key, V value) {
-            this.key = key;
-            this.value = value;
-        }
-        
-        public K getKey() { return key; }
-        public V getValue() { return value; }
-    }
+    return -1;
 }`,
-    bruteForceComplexity: {
-      time: "O(1) for set, O(n) for get",
-      space: "O(n)",
-      reasoning: "Linear search through all timestamps for each get operation."
-    },
-    optimalComplexity: {
-      time: "O(1) for set, O(log n) for get",
-      space: "O(n)",
-      reasoning: "Binary search on timestamps since they are stored in chronological order."
-    },
-    leetcodeUrl: "https://leetcode.com/problems/time-based-key-value-store/"
+        timeComplexity: "O(log n)",
+        spaceComplexity: "O(1)",
+        explanation: "We use binary search. At each step, we determine which half of the array is sorted. If the target is in the sorted half, we search there; otherwise, we search in the other half."
+      }
+    ],
+    leetCodeUrl: "https://leetcode.com/problems/search-in-rotated-sorted-array/",
+    difficulty: "Medium",
+    category: "binarySearch"
   },
   {
-    id:31
+    id: 36,
+    title: "Time Based Key-Value Store",
+    description: "Design a time-based key-value data structure that can store multiple values for the same key at different time stamps and retrieve the key's value at a certain timestamp.",
+    examples: [
+      {
+        input: `TimeMap timeMap = new TimeMap();
+timeMap.set("foo", "bar", 1);
+timeMap.get("foo", 1);  // return "bar"
+timeMap.get("foo", 3);  // return "bar"
+timeMap.set("foo", "bar2", 4);
+timeMap.get("foo", 4);  // return "bar2"
+timeMap.get("foo", 5);  // return "bar2"`,
+        output: "[null,null,\"bar\",\"bar\",null,\"bar2\",\"bar2\"]",
+        explanation: "TimeMap is initialized, then various operations are performed."
+      }
+    ],
+    solutions: [
+      {
+        approach: "Brute Force",
+        code: `class TimeMap {
+    private Map<String, List<Pair<Integer, String>>> map;
+    
+    public TimeMap() {
+        map = new HashMap<>();
+    }
+    
+    public void set(String key, String value, int timestamp) {
+        map.putIfAbsent(key, new ArrayList<>());
+        map.get(key).add(new Pair<>(timestamp, value));
+    }
+    
+    public String get(String key, int timestamp) {
+        if (!map.containsKey(key)) return "";
+        
+        List<Pair<Integer, String>> values = map.get(key);
+        for (int i = values.size() - 1; i >= 0; i--) {
+            if (values.get(i).getKey() <= timestamp) {
+                return values.get(i).getValue();
+            }
+        }
+        
+        return "";
+    }
+}`,
+        timeComplexity: "O(n) for get, O(1) for set",
+        spaceComplexity: "O(n)",
+        explanation: "We store all values in a list and search linearly for the most recent value before or at the given timestamp."
+      },
+      {
+        approach: "Optimal",
+        code: `class TimeMap {
+    private Map<String, TreeMap<Integer, String>> map;
+    
+    public TimeMap() {
+        map = new HashMap<>();
+    }
+    
+    public void set(String key, String value, int timestamp) {
+        map.putIfAbsent(key, new TreeMap<>());
+        map.get(key).put(timestamp, value);
+    }
+    
+    public String get(String key, int timestamp) {
+        if (!map.containsKey(key)) return "";
+        
+        TreeMap<Integer, String> treeMap = map.get(key);
+        Integer floorKey = treeMap.floorKey(timestamp);
+        return floorKey == null ? "" : treeMap.get(floorKey);
+    }
+}`,
+        timeComplexity: "O(log n) for both get and set",
+        spaceComplexity: "O(n)",
+        explanation: "We use a TreeMap to store timestamps and values. The floorKey method efficiently finds the largest key less than or equal to the given timestamp."
+      }
+    ],
+    leetCodeUrl: "https://leetcode.com/problems/time-based-key-value-store/",
+    difficulty: "Medium",
+    category: "binarySearch"
+  },
+  {
+    id: 37,
     title: "Median of Two Sorted Arrays",
-    description: "Given two sorted arrays nums1 and nums2 of size m and n respectively, return the median of the two sorted arrays.\n\nThe overall run time complexity should be O(log (m+n)).",
-    difficulty: "Hard",
+    description: "Given two sorted arrays nums1 and nums2 of size m and n respectively, return the median of the two sorted arrays. The overall run time complexity should be O(log (m+n)).",
     examples: [
       {
         input: "nums1 = [1,3], nums2 = [2]",
@@ -461,83 +428,82 @@ export const binarySearchQuestions: Question[] = [
         explanation: "merged array = [1,2,3,4] and median is (2 + 3) / 2 = 2.5."
       }
     ],
-    bruteForceSolution: `class Solution {
-    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
-        // Merge two arrays
-        List<Integer> merged = new ArrayList<>();
-        int i = 0, j = 0;
-        
-        while (i < nums1.length && j < nums2.length) {
-            if (nums1[i] <= nums2[j]) {
-                merged.add(nums1[i++]);
-            } else {
-                merged.add(nums2[j++]);
-            }
-        }
-        
-        while (i < nums1.length) {
-            merged.add(nums1[i++]);
-        }
-        
-        while (j < nums2.length) {
-            merged.add(nums2[j++]);
-        }
-        
-        int n = merged.size();
-        if (n % 2 == 1) {
-            return merged.get(n / 2);
+    solutions: [
+      {
+        approach: "Brute Force",
+        code: `public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+    int m = nums1.length;
+    int n = nums2.length;
+    int[] merged = new int[m + n];
+    
+    int i = 0, j = 0, k = 0;
+    while (i < m && j < n) {
+        if (nums1[i] <= nums2[j]) {
+            merged[k++] = nums1[i++];
         } else {
-            return (merged.get(n / 2 - 1) + merged.get(n / 2)) / 2.0;
+            merged[k++] = nums2[j++];
         }
     }
+    
+    while (i < m) merged[k++] = nums1[i++];
+    while (j < n) merged[k++] = nums2[j++];
+    
+    int mid = (m + n) / 2;
+    if ((m + n) % 2 == 0) {
+        return (merged[mid - 1] + merged[mid]) / 2.0;
+    } else {
+        return merged[mid];
+    }
 }`,
-    optimalSolution: `class Solution {
-    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
-        if (nums1.length > nums2.length) {
-            return findMedianSortedArrays(nums2, nums1);
-        }
+        timeComplexity: "O(m + n)",
+        spaceComplexity: "O(m + n)",
+        explanation: "We merge the two sorted arrays and then find the median."
+      },
+      {
+        approach: "Optimal",
+        code: `public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+    if (nums1.length > nums2.length) {
+        return findMedianSortedArrays(nums2, nums1);
+    }
+    
+    int m = nums1.length;
+    int n = nums2.length;
+    int left = 0;
+    int right = m;
+    
+    while (left <= right) {
+        int partitionX = (left + right) / 2;
+        int partitionY = (m + n + 1) / 2 - partitionX;
         
-        int m = nums1.length;
-        int n = nums2.length;
-        int left = 0, right = m;
+        int maxLeftX = (partitionX == 0) ? Integer.MIN_VALUE : nums1[partitionX - 1];
+        int minRightX = (partitionX == m) ? Integer.MAX_VALUE : nums1[partitionX];
         
-        while (left <= right) {
-            int partitionX = (left + right) / 2;
-            int partitionY = (m + n + 1) / 2 - partitionX;
-            
-            int maxLeftX = (partitionX == 0) ? Integer.MIN_VALUE : nums1[partitionX - 1];
-            int minRightX = (partitionX == m) ? Integer.MAX_VALUE : nums1[partitionX];
-            
-            int maxLeftY = (partitionY == 0) ? Integer.MIN_VALUE : nums2[partitionY - 1];
-            int minRightY = (partitionY == n) ? Integer.MAX_VALUE : nums2[partitionY];
-            
-            if (maxLeftX <= minRightY && maxLeftY <= minRightX) {
-                // Found correct partition
-                if ((m + n) % 2 == 0) {
-                    return (Math.max(maxLeftX, maxLeftY) + Math.min(minRightX, minRightY)) / 2.0;
-                } else {
-                    return Math.max(maxLeftX, maxLeftY);
-                }
-            } else if (maxLeftX > minRightY) {
-                right = partitionX - 1;
+        int maxLeftY = (partitionY == 0) ? Integer.MIN_VALUE : nums2[partitionY - 1];
+        int minRightY = (partitionY == n) ? Integer.MAX_VALUE : nums2[partitionY];
+        
+        if (maxLeftX <= minRightY && maxLeftY <= minRightX) {
+            if ((m + n) % 2 == 0) {
+                return (Math.max(maxLeftX, maxLeftY) + 
+                        Math.min(minRightX, minRightY)) / 2.0;
             } else {
-                left = partitionX + 1;
+                return Math.max(maxLeftX, maxLeftY);
             }
+        } else if (maxLeftX > minRightY) {
+            right = partitionX - 1;
+        } else {
+            left = partitionX + 1;
         }
-        
-        throw new IllegalArgumentException("Input arrays are not sorted");
     }
+    
+    throw new IllegalArgumentException();
 }`,
-    bruteForceComplexity: {
-      time: "O(m + n)",
-      space: "O(m + n)",
-      reasoning: "Merge both arrays completely to find median."
-    },
-    optimalComplexity: {
-      time: "O(log(min(m, n)))",
-      space: "O(1)",
-      reasoning: "Binary search on smaller array to find correct partition point."
-    },
-    leetcodeUrl: "https://leetcode.com/problems/median-of-two-sorted-arrays/"
+        timeComplexity: "O(log(min(m,n)))",
+        spaceComplexity: "O(1)",
+        explanation: "We use binary search to find the correct partition point in the smaller array that divides both arrays into left and right parts of equal size, where all elements on the left are smaller than all elements on the right."
+      }
+    ],
+    leetCodeUrl: "https://leetcode.com/problems/median-of-two-sorted-arrays/",
+    difficulty: "Hard",
+    category: "binarySearch"
   }
 ];

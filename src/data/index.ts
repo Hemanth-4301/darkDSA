@@ -2,6 +2,13 @@ import { arrayQuestions } from "./arrays";
 import { twoPointersQuestions } from "./twoPointers";
 import { slidingWindowQuestions } from "./slidingWindow";
 import { stackQuestions } from "./stack";
+import { linkedListQuestions } from "./linkedList";
+import { treesQuestions } from "./trees";
+import { triesQuestions } from "./tries";
+import { heapQuestions } from "./heap";
+import { backtrackingQuestions } from "./backtracking";
+import { binarySearchQuestions } from "./binarySearch";
+
 import { categories } from "./categories";
 import { Question } from "../types";
 
@@ -11,6 +18,13 @@ export const allQuestions: Question[] = [
   ...twoPointersQuestions,
   ...slidingWindowQuestions,
   ...stackQuestions,
+  ...linkedListQuestions,
+  ...treesQuestions,
+  ...triesQuestions,
+  ...heapQuestions,
+  ...backtrackingQuestions,
+  ...binarySearchQuestions,
+  
 ];
 
 // Export categories
