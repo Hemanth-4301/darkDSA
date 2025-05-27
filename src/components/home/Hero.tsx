@@ -26,7 +26,7 @@ const Hero: React.FC = () => {
               </h1>
               <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-xl leading-relaxed">
                 Master the most important algorithms and ace your technical
-                interviews with our curated collection of 140+ essential
+                interviews with our curated collection of 110+ essential
                 problems.
               </p>
               <div className="flex flex-col sm:flex-row gap-8 mb-12">
@@ -121,7 +121,7 @@ const Hero: React.FC = () => {
                       {totalSolved}
                     </span>
                     <span className="block text-sm text-primary-600 dark:text-primary-400">
-                      of 150
+                      of 117
                     </span>
                   </div>
                 </div>

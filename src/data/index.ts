@@ -8,6 +8,13 @@ import { triesQuestions } from "./tries";
 import { heapQuestions } from "./heap";
 import { backtrackingQuestions } from "./backtracking";
 import { binarySearchQuestions } from "./binarySearch";
+import { bitQuestions } from "./bit";
+import { dp1dQuestions } from "./dp1d";
+import { dp2dQuestions } from "./dp2d";
+import { graphsQuestions } from "./graphs";
+import { mathQuestions } from "./math";
+import { greedyQuestions } from "./greedy";
+import { intervalsQuestions } from "./intervals";
 
 import { categories } from "./categories";
 import { Question } from "../types";
@@ -24,7 +31,13 @@ export const allQuestions: Question[] = [
   ...heapQuestions,
   ...backtrackingQuestions,
   ...binarySearchQuestions,
-  
+  ...bitQuestions,
+  ...dp1dQuestions,
+  ...dp2dQuestions,
+  ...graphsQuestions,
+  ...mathQuestions,
+  ...greedyQuestions,
+  ...intervalsQuestions,
 ];
 
 // Export categories
