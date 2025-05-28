@@ -38,7 +38,7 @@ const Chatbot: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isSpeaking, setIsSpeaking] = useState(false);
-  const [speechMessageId, setSpeechMessageId] = useState<string | null>(null);
+  const [speechMessageId, setSpeechMessageId] = useState(null);
   const [isListening, setIsListening] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -301,7 +301,7 @@ const Chatbot: React.FC = () => {
     const blocks = extractCodeBlocks(content);
 
     return (
-      <div className="prose prose-slate max-w-full prose-headings:text-slate-800 prose-p:text-slate-700 prose-strong:text-slate-800 prose-code:text-purple-600 prose-pre:bg-transparent prose-pre:p-0">
+      <div className="prose prose-slate dark:prose-invert max-w-full prose-headings:text-gray-900 dark:prose-headings:text-gray-100 prose-p:text-gray-800 dark:prose-p:text-gray-200 prose-strong:text-gray-900 dark:prose-strong:text-gray-100 prose-code:text-purple-600 dark:prose-code:text-purple-400 prose-pre:bg-transparent prose-pre:p-0 prose-li:text-gray-800 dark:prose-li:text-gray-200">
         {blocks.map((block, index) => {
           if (block.type === "code") {
             const highlightedCode = hljs.highlight(block.content, {
@@ -309,8 +309,8 @@ const Chatbot: React.FC = () => {
             }).value;
 
             return (
-              <div key={index} className="relative my-4">
-                <div className="flex justify-between items-center bg-gradient-to-r from-slate-800 to-slate-900 text-slate-300 px-4 py-2 text-sm rounded-t-xl border border-slate-700/50">
+              <div key={index} className="relative my-3 sm:my-4">
+                <div className="flex justify-between items-center bg-gradient-to-r from-slate-800 to-slate-900 text-slate-300 px-3 sm:px-4 py-2 text-sm rounded-t-xl border border-slate-700/50">
                   <span className="font-medium">
                     {block.language || "code"}
                   </span>
@@ -319,10 +319,10 @@ const Chatbot: React.FC = () => {
                     className="flex items-center gap-2 hover:text-white transition-colors duration-200 px-2 py-1 rounded-lg hover:bg-white/10"
                   >
                     <Copy className="w-4 h-4" />
-                    Copy
+                    <span className="hidden sm:inline">Copy</span>
                   </button>
                 </div>
-                <pre className="m-0 p-4 bg-slate-900 rounded-b-xl overflow-x-auto border-x border-b border-slate-700/50">
+                <pre className="m-0 p-3 sm:p-4 bg-slate-900 rounded-b-xl overflow-x-auto border-x border-b border-slate-700/50">
                   <code
                     className={`hljs language-${block.language}`}
                     dangerouslySetInnerHTML={{ __html: highlightedCode }}
@@ -340,7 +340,7 @@ const Chatbot: React.FC = () => {
             <div
               key={index}
               dangerouslySetInnerHTML={{ __html: html }}
-              className="my-2 break-words"
+              className="my-1 sm:my-2 break-words"
             />
           );
         })}
@@ -353,27 +353,29 @@ const Chatbot: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-full bg-gradient-to-br from-violet-400/20 via-purple-300/20 to-indigo-400/20 backdrop-blur-3xl rounded-2xl overflow-hidden border border-white/30 shadow-2xl relative">
+    <div className="flex flex-col h-full bg-gradient-to-br from-violet-400/20 via-purple-300/20 to-indigo-400/20 dark:from-violet-600/30 dark:via-purple-500/30 dark:to-indigo-600/30 backdrop-blur-3xl rounded-2xl overflow-hidden border border-white/30 dark:border-white/20 shadow-2xl relative">
       {/* Animated background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-pink-400/10 via-purple-400/10 to-cyan-400/10 animate-pulse"></div>
-      <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-pink-400/10 via-purple-400/10 to-cyan-400/10 dark:from-pink-500/20 dark:via-purple-500/20 dark:to-cyan-500/20 animate-pulse"></div>
+      <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 dark:via-white/10 to-transparent"></div>
 
       {/* Header */}
-      <div className="relative z-10 flex items-center justify-between p-4 bg-gradient-to-r from-white/25 via-white/20 to-white/25 backdrop-blur-xl border-b border-white/30">
-        <div className="flex items-center gap-3">
-          <div className="p-3 rounded-2xl bg-gradient-to-br from-violet-500/30 to-purple-600/30 backdrop-blur-sm border border-white/30 shadow-lg">
-            <Bot className="w-6 h-6 text-violet-700" />
+      <div className="relative z-10 flex items-center justify-between p-3 sm:p-4 bg-gradient-to-r from-white/25 via-white/20 to-white/25 dark:from-gray-900/40 dark:via-gray-800/40 dark:to-gray-900/40 backdrop-blur-xl border-b border-white/30 dark:border-white/20">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <div className="p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-gradient-to-br from-violet-500/30 to-purple-600/30 backdrop-blur-sm border border-white/30 shadow-lg">
+            <Bot className="w-5 h-5 sm:w-6 sm:h-6 text-violet-700 dark:text-violet-300" />
           </div>
           <div>
-            <h2 className="text-xl font-bold bg-gradient-to-r from-violet-700 to-purple-700 bg-clip-text text-transparent">
+            <h2 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-violet-700 to-purple-700 dark:from-violet-300 dark:to-purple-300 bg-clip-text text-transparent">
               AI Assistant
             </h2>
-            <p className="text-sm text-slate-600">Powered by Gemini</p>
+            <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
+              Powered by Gemini
+            </p>
           </div>
         </div>
         <button
           onClick={startNewConversation}
-          className="px-4 py-2 rounded-xl flex items-center gap-2 bg-gradient-to-r from-violet-500/80 to-purple-600/80 text-white text-sm hover:from-violet-600/90 hover:to-purple-700/90 transition-all duration-300 backdrop-blur-sm shadow-lg border border-white/20 hover:scale-105"
+          className="px-3 py-2 sm:px-4 sm:py-2 rounded-xl flex items-center gap-2 bg-gradient-to-r from-violet-500/80 to-purple-600/80 text-white text-sm hover:from-violet-600/90 hover:to-purple-700/90 transition-all duration-300 backdrop-blur-sm shadow-lg border border-white/20 hover:scale-105"
           title="New Conversation"
         >
           <Plus className="w-4 h-4" />
@@ -382,20 +384,20 @@ const Chatbot: React.FC = () => {
       </div>
 
       {/* Chat area */}
-      <div className="relative z-10 flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent">
+      <div className="relative z-10 flex-1 overflow-y-auto p-2 sm:p-4 space-y-3 sm:space-y-4 scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent">
         {messages.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full text-slate-700 p-6">
-            <div className="w-20 h-20 mb-6 flex items-center justify-center bg-gradient-to-br from-violet-400/30 to-purple-500/30 rounded-3xl shadow-xl backdrop-blur-sm border border-white/30">
-              <Bot className="w-10 h-10 text-violet-700" />
+          <div className="flex flex-col items-center justify-center h-full text-gray-700 dark:text-gray-200 p-4 sm:p-6">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 mb-4 sm:mb-6 flex items-center justify-center bg-gradient-to-br from-violet-400/30 to-purple-500/30 rounded-2xl sm:rounded-3xl shadow-xl backdrop-blur-sm border border-white/30">
+              <Bot className="w-8 h-8 sm:w-10 sm:h-10 text-violet-700 dark:text-violet-300" />
             </div>
-            <h3 className="text-2xl font-bold bg-gradient-to-r from-violet-700 to-purple-700 bg-clip-text text-transparent mb-3 text-center">
+            <h3 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-violet-700 to-purple-700 dark:from-violet-300 dark:to-purple-300 bg-clip-text text-transparent mb-2 sm:mb-3 text-center">
               How can I help you today?
             </h3>
-            <p className="text-center max-w-md text-slate-600 mb-8 leading-relaxed">
+            <p className="text-center max-w-md text-sm sm:text-base text-gray-600 dark:text-gray-300 mb-6 sm:mb-8 leading-relaxed px-2">
               Ask me anything about coding, algorithms, or tech. I can explain
               concepts, help debug code, or suggest solutions.
             </p>
-            <div className="grid grid-cols-1 gap-3 w-full max-w-lg">
+            <div className="grid grid-cols-1 gap-2 sm:gap-3 w-full max-w-lg px-2">
               {[
                 "What's the optimal solution for the 3Sum problem in Java?",
                 "Explain React hooks with examples",
@@ -404,10 +406,10 @@ const Chatbot: React.FC = () => {
               ].map((prompt, i) => (
                 <div
                   key={i}
-                  className="p-4 rounded-xl cursor-pointer bg-gradient-to-r from-white/40 to-white/30 hover:from-white/50 hover:to-white/40 transition-all duration-300 backdrop-blur-sm border border-white/30 shadow-lg hover:shadow-xl hover:scale-[1.02]"
+                  className="p-3 sm:p-4 rounded-xl cursor-pointer bg-gradient-to-r from-white/40 to-white/30 dark:from-gray-800/50 dark:to-gray-700/50 hover:from-white/50 hover:to-white/40 dark:hover:from-gray-700/60 dark:hover:to-gray-600/60 transition-all duration-300 backdrop-blur-sm border border-white/30 dark:border-white/20 shadow-lg hover:shadow-xl hover:scale-[1.02]"
                   onClick={() => setInput(prompt)}
                 >
-                  <p className="text-sm font-medium text-slate-700 leading-relaxed">
+                  <p className="text-sm font-medium text-gray-700 dark:text-gray-200 leading-relaxed">
                     {prompt.split("?")[0].substring(0, 40)}...
                   </p>
                 </div>
@@ -424,27 +426,27 @@ const Chatbot: React.FC = () => {
                 }`}
               >
                 <div
-                  className={`w-full sm:max-w-[85%] md:max-w-[80%] lg:max-w-[75%] rounded-2xl p-4 backdrop-blur-sm border shadow-lg ${
+                  className={`w-full rounded-xl sm:rounded-2xl p-3 sm:p-4 backdrop-blur-sm border shadow-lg ${
                     message.role === "user"
-                      ? "bg-gradient-to-br from-violet-500/20 to-purple-600/20 border-violet-300/30 text-slate-800"
-                      : "bg-gradient-to-br from-white/40 to-white/30 border-white/40 text-slate-800"
+                      ? "bg-gradient-to-br from-violet-500/20 to-purple-600/20 dark:from-violet-600/30 dark:to-purple-700/30 border-violet-300/30 dark:border-violet-400/30 text-gray-800 dark:text-gray-100"
+                      : "bg-gradient-to-br from-white/40 to-white/30 dark:from-gray-800/60 dark:to-gray-700/60 border-white/40 dark:border-white/20 text-gray-800 dark:text-gray-100"
                   }`}
                 >
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-sm font-semibold text-slate-700">
+                  <div className="flex items-center justify-between mb-2 sm:mb-3">
+                    <span className="text-sm font-semibold text-gray-700 dark:text-gray-200">
                       {message.role === "user" ? "You" : "AI Assistant"}
                     </span>
-                    <div className="flex items-center gap-3">
-                      <span className="text-xs text-slate-500">
+                    <div className="flex items-center gap-2 sm:gap-3">
+                      <span className="text-xs text-gray-500 dark:text-gray-400">
                         {formatTime(message.timestamp)}
                       </span>
                       {message.role === "assistant" && (
                         <button
                           onClick={() => toggleSpeech(message)}
-                          className={`p-2 rounded-full transition-all duration-200 ${
+                          className={`p-1.5 sm:p-2 rounded-full transition-all duration-200 ${
                             isSpeaking && speechMessageId === message.id
-                              ? "text-red-500 bg-red-100/50"
-                              : "text-slate-500 hover:text-slate-700 hover:bg-white/30"
+                              ? "text-red-500 bg-red-100/50 dark:bg-red-900/30"
+                              : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-white/30 dark:hover:bg-white/10"
                           }`}
                           title={
                             isSpeaking && speechMessageId === message.id
@@ -453,9 +455,9 @@ const Chatbot: React.FC = () => {
                           }
                         >
                           {isSpeaking && speechMessageId === message.id ? (
-                            <VolumeX className="w-4 h-4" />
+                            <VolumeX className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                           ) : (
-                            <Volume2 className="w-4 h-4" />
+                            <Volume2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                           )}
                         </button>
                       )}
@@ -469,19 +471,19 @@ const Chatbot: React.FC = () => {
         )}
         {isLoading && (
           <div className="flex justify-start">
-            <div className="w-full sm:max-w-[85%] md:max-w-[80%] lg:max-w-[75%] rounded-2xl p-4 bg-gradient-to-br from-white/40 to-white/30 backdrop-blur-sm border border-white/40 shadow-lg">
-              <div className="flex items-center gap-4">
-                <div className="w-8 h-8 rounded-full flex items-center justify-center bg-gradient-to-br from-violet-400/30 to-purple-500/30">
-                  <Bot className="w-4 h-4 text-violet-700" />
+            <div className="w-full rounded-xl sm:rounded-2xl p-3 sm:p-4 bg-gradient-to-br from-white/40 to-white/30 dark:from-gray-800/60 dark:to-gray-700/60 backdrop-blur-sm border border-white/40 dark:border-white/20 shadow-lg">
+              <div className="flex items-center gap-3 sm:gap-4">
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center bg-gradient-to-br from-violet-400/30 to-purple-500/30">
+                  <Bot className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-violet-700 dark:text-violet-300" />
                 </div>
                 <div className="flex space-x-2">
-                  <div className="w-3 h-3 bg-violet-500 rounded-full animate-bounce"></div>
+                  <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 bg-violet-500 rounded-full animate-bounce"></div>
                   <div
-                    className="w-3 h-3 bg-purple-500 rounded-full animate-bounce"
+                    className="w-2.5 h-2.5 sm:w-3 sm:h-3 bg-purple-500 rounded-full animate-bounce"
                     style={{ animationDelay: "0.2s" }}
                   ></div>
                   <div
-                    className="w-3 h-3 bg-indigo-500 rounded-full animate-bounce"
+                    className="w-2.5 h-2.5 sm:w-3 sm:h-3 bg-indigo-500 rounded-full animate-bounce"
                     style={{ animationDelay: "0.4s" }}
                   ></div>
                 </div>
@@ -490,7 +492,7 @@ const Chatbot: React.FC = () => {
           </div>
         )}
         {error && (
-          <div className="text-red-600 text-sm p-4 text-center rounded-xl bg-gradient-to-r from-red-100/60 to-pink-100/60 backdrop-blur-sm border border-red-200/50 shadow-lg">
+          <div className="text-red-600 dark:text-red-400 text-sm p-3 sm:p-4 text-center rounded-xl bg-gradient-to-r from-red-100/60 to-pink-100/60 dark:from-red-900/40 dark:to-pink-900/40 backdrop-blur-sm border border-red-200/50 dark:border-red-700/50 shadow-lg">
             {error}
           </div>
         )}
@@ -500,9 +502,9 @@ const Chatbot: React.FC = () => {
       {/* Input area */}
       <form
         onSubmit={handleSubmit}
-        className="relative z-10 p-4 bg-gradient-to-r from-white/25 via-white/20 to-white/25 backdrop-blur-xl border-t border-white/30"
+        className="relative z-10 p-3 sm:p-4 bg-gradient-to-r from-white/25 via-white/20 to-white/25 dark:from-gray-900/40 dark:via-gray-800/40 dark:to-gray-900/40 backdrop-blur-xl border-t border-white/30 dark:border-white/20"
       >
-        <div className="flex flex-col sm:flex-row items-end gap-3">
+        <div className="flex flex-col sm:flex-row items-end gap-2 sm:gap-3">
           {/* Text input */}
           <div className="flex-1 w-full">
             <textarea
@@ -510,9 +512,9 @@ const Chatbot: React.FC = () => {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Type your message here..."
-              className="w-full resize-none rounded-2xl px-6 py-4 bg-gradient-to-r from-white/60 to-white/50 text-slate-800 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-400/50 border border-white/50 backdrop-blur-sm shadow-lg transition-all duration-300 focus:shadow-xl"
+              className="w-full resize-none rounded-xl sm:rounded-2xl px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-white/60 to-white/50 dark:from-gray-700/60 dark:to-gray-600/60 text-gray-800 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-400/50 border border-white/50 dark:border-white/30 backdrop-blur-sm shadow-lg transition-all duration-300 focus:shadow-xl"
               rows={1}
-              style={{ minHeight: "56px", maxHeight: "120px" }}
+              style={{ minHeight: "48px", maxHeight: "120px" }}
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) {
                   e.preventDefault();
@@ -527,36 +529,38 @@ const Chatbot: React.FC = () => {
             <button
               type="button"
               onClick={toggleListening}
-              className={`p-4 rounded-2xl transition-all duration-300 shadow-lg ${
+              className={`p-3 sm:p-4 rounded-xl sm:rounded-2xl transition-all duration-300 shadow-lg ${
                 isListening
                   ? "text-white bg-gradient-to-r from-red-500 to-red-600 shadow-red-200"
-                  : "text-slate-600 bg-gradient-to-r from-white/60 to-white/50 hover:from-white/70 hover:to-white/60 backdrop-blur-sm border border-white/50"
+                  : "text-gray-600 dark:text-gray-300 bg-gradient-to-r from-white/60 to-white/50 dark:from-gray-700/60 dark:to-gray-600/60 hover:from-white/70 hover:to-white/60 dark:hover:from-gray-600/70 dark:hover:to-gray-500/70 backdrop-blur-sm border border-white/50 dark:border-white/30"
               }`}
               title={isListening ? "Stop listening" : "Voice input"}
             >
-              <Mic className="w-5 h-5" />
+              <Mic className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
             <button
               type="submit"
               disabled={!input.trim() || isLoading}
-              className="p-4 rounded-2xl bg-gradient-to-r from-violet-500 to-purple-600 text-white hover:from-violet-600 hover:to-purple-700 disabled:from-slate-400 disabled:to-slate-500 disabled:cursor-not-allowed transition-all duration-300 backdrop-blur-sm shadow-lg hover:shadow-xl hover:scale-105 disabled:hover:scale-100"
+              className="p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-r from-violet-500 to-purple-600 text-white hover:from-violet-600 hover:to-purple-700 disabled:from-gray-400 disabled:to-gray-500 dark:disabled:from-gray-600 dark:disabled:to-gray-700 disabled:cursor-not-allowed transition-all duration-300 backdrop-blur-sm shadow-lg hover:shadow-xl hover:scale-105 disabled:hover:scale-100"
             >
               {isLoading ? (
-                <Loader2 className="w-5 h-5 animate-spin" />
+                <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
               ) : (
-                <Send className="w-5 h-5" />
+                <Send className="w-4 h-4 sm:w-5 sm:h-5" />
               )}
             </button>
           </div>
         </div>
 
         {/* Footer info */}
-        <div className="flex justify-between items-center mt-3 px-2">
-          <p className="text-xs text-slate-500">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-2 sm:mt-3 px-1 sm:px-2 gap-2 sm:gap-0">
+          <p className="text-xs text-gray-500 dark:text-gray-400">
             Press{" "}
-            <kbd className="px-2 py-1 bg-white/30 rounded text-xs">Enter</kbd>{" "}
+            <kbd className="px-1.5 py-0.5 sm:px-2 sm:py-1 bg-white/30 dark:bg-gray-700/50 rounded text-xs">
+              Enter
+            </kbd>{" "}
             to send,{" "}
-            <kbd className="px-2 py-1 bg-white/30 rounded text-xs">
+            <kbd className="px-1.5 py-0.5 sm:px-2 sm:py-1 bg-white/30 dark:bg-gray-700/50 rounded text-xs">
               Shift+Enter
             </kbd>{" "}
             for new line
@@ -564,7 +568,7 @@ const Chatbot: React.FC = () => {
           {isSpeaking && (
             <button
               onClick={stopAllSpeech}
-              className="text-xs flex items-center gap-2 text-red-500 hover:text-red-600 px-3 py-1 rounded-full bg-white/30 hover:bg-white/40 transition-all duration-200"
+              className="text-xs flex items-center gap-1 sm:gap-2 text-red-500 hover:text-red-600 px-2 sm:px-3 py-1 rounded-full bg-white/30 dark:bg-gray-700/30 hover:bg-white/40 dark:hover:bg-gray-600/40 transition-all duration-200"
             >
               <VolumeX className="w-3 h-3" />
               Stop reading
