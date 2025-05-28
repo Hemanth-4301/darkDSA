@@ -89,7 +89,7 @@ export default function Todo() {
         </div>
 
         {/* Main Container */}
-        <div className="backdrop-blur-lg bg-white/70 dark:bg-gray-800/70 rounded-3xl border border-white/30 dark:border-gray-600/30 shadow-2xl p-6 sm:p-8 transition-all duration-300 hover:bg-white/80 dark:hover:bg-gray-800/80">
+        <div className="backdrop-blur-lg bg-white/70 dark:bg-gray-800/70 rounded-3xl border border-white/30 dark:border-gray-600/30 shadow-2xl p-4 transition-all duration-300 hover:bg-white/80 dark:hover:bg-gray-800/80">
           {/* Add Todo Section */}
           <div className="mb-8">
             <div className="flex flex-col sm:flex-row gap-3">
