@@ -355,7 +355,7 @@ const Chatbot: React.FC = () => {
   return (
     <div className="flex flex-col h-full bg-gradient-to-br from-violet-400/20 via-purple-300/20 to-indigo-400/20 dark:from-violet-600/30 dark:via-purple-500/30 dark:to-indigo-600/30 backdrop-blur-3xl rounded-2xl overflow-hidden border border-white/30 dark:border-white/20 shadow-2xl relative">
       {/* Animated background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-pink-400/10 via-purple-400/10 to-cyan-400/10 dark:from-pink-500/20 dark:via-purple-500/20 dark:to-cyan-500/20 animate-pulse"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-pink-400/10 via-purple-400/10 to-cyan-400/10 dark:from-pink-500/20 dark:via-purple-500/20 dark:to-cyan-500/20 "></div>
       <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 dark:via-white/10 to-transparent"></div>
 
       {/* Header */}
@@ -512,7 +512,7 @@ const Chatbot: React.FC = () => {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Type your message here..."
-              className="w-full resize-none rounded-xl sm:rounded-2xl px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-white/60 to-white/50 dark:from-gray-700/60 dark:to-gray-600/60 text-gray-800 dark:text-gray-800 placeholder-gray-500 dark:placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-violet-400/50 border border-white/50 dark:border-white/30 backdrop-blur-sm shadow-lg transition-all duration-300 focus:shadow-xl"
+              className="w-full resize-none rounded-xl sm:rounded-2xl px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-white/60 to-white/50 dark:from-gray-700/60 dark:to-gray-600/60 text-gray-800 dark:text-black placeholder-gray-500 dark:placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-violet-400/50 border border-white/50 dark:border-white/30 backdrop-blur-sm shadow-lg transition-all duration-300 focus:shadow-xl"
               rows={1}
               style={{ minHeight: "48px", maxHeight: "120px" }}
               onKeyDown={(e) => {
