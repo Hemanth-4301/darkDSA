@@ -1,4 +1,3 @@
-"use client";
 import type React from "react";
 import { useState, useRef, useEffect } from "react";
 import { marked } from "marked";
@@ -14,8 +13,6 @@ import {
   Mic,
   Plus,
 } from "lucide-react";
-const dotenv = require("dotenv");
-dotenv.config();
 
 // Configure marked to use highlight.js for code blocks
 marked.setOptions({
@@ -46,7 +43,7 @@ const Chatbot: React.FC = () => {
   const speechSynthesis = window.speechSynthesis;
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
   const recognitionRef = useRef<any>(null);
-  const apikey = process.env.REACT_APP_gemini_api_key;
+  const apikey = import.meta.env.VITE_GEMINI_API_KEY;
 
   const startNewConversation = () => {
     setMessages([]);
@@ -147,6 +144,7 @@ const Chatbot: React.FC = () => {
     try {
       const response = await fetch(
         `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apikey}`,
+
         {
           method: "POST",
           headers: {
