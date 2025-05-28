@@ -1,7 +1,4 @@
 import React, { useState, useRef, useEffect } from "react";
-import { marked } from "marked";
-import hljs from "highlight.js";
-import "highlight.js/styles/github-dark.css";
 import {
   Copy,
   Send,
@@ -12,22 +9,7 @@ import {
   Mic,
   Plus,
 } from "lucide-react";
-
-// Configure marked to use highlight.js for code blocks
-marked.setOptions({
-  highlight: function (code, lang) {
-    const language = hljs.getLanguage(lang) ? lang : "plaintext";
-    return hljs.highlight(code, { language }).value;
-  },
-  langPrefix: "hljs language-",
-});
-
-interface Message {
-  id: string;
-  role: "user" | "assistant";
-  content: string;
-  timestamp: Date;
-}
+import { Message, CodeBlock } from "./types";
 
 const Chatbot: React.FC = () => {
   const [input, setInput] = useState("");
@@ -202,7 +184,7 @@ const Chatbot: React.FC = () => {
     const toast = document.createElement("div");
     toast.textContent = "Copied to clipboard!";
     toast.className =
-      "fixed bottom-4 right-4 bg-gray-800 text-white px-4 py-2 rounded-lg shadow-lg z-50";
+      "fixed bottom-4 right-4 bg-gradient-to-r from-blue-600/90 to-blue-700/90 text-white px-4 py-2 rounded-lg shadow-lg z-50 backdrop-blur-md";
     document.body.appendChild(toast);
     setTimeout(() => toast.remove(), 2000);
   };
@@ -261,9 +243,9 @@ const Chatbot: React.FC = () => {
     };
   }, []);
 
-  const extractCodeBlocks = (content: string) => {
+  const extractCodeBlocks = (content: string): CodeBlock[] => {
     const codeBlockRegex = /```(\w+)?\n([\s\S]*?)\n```/g;
-    const blocks = [];
+    const blocks: CodeBlock[] = [];
     let match;
     let lastIndex = 0;
 
@@ -294,6 +276,12 @@ const Chatbot: React.FC = () => {
     return blocks.length ? blocks : [{ type: "text", content }];
   };
 
+  // Format timestamp
+  const formatTime = (date: Date) => {
+    return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  };
+
+  // Render the message content with proper formatting
   const renderMessageContent = (content: string) => {
     const blocks = extractCodeBlocks(content);
 
@@ -301,251 +289,256 @@ const Chatbot: React.FC = () => {
       <div className="prose dark:prose-invert max-w-full">
         {blocks.map((block, index) => {
           if (block.type === "code") {
-            const highlightedCode = hljs.highlight(block.content, {
-              language: block.language,
-            }).value;
-
             return (
               <div key={index} className="relative my-2">
-                <div className="flex justify-between items-center bg-gray-800 text-gray-300 px-3 py-1 text-xs rounded-t-lg">
+                <div className="flex justify-between items-center bg-indigo-900/70 text-white px-3 py-1 text-xs rounded-t-lg backdrop-blur-md">
                   <span>{block.language || "code"}</span>
                   <button
                     onClick={() => copyToClipboard(block.content)}
-                    className="flex items-center gap-1 hover:text-white transition-colors"
+                    className="flex items-center gap-1 hover:text-blue-200 transition-colors"
                   >
                     <Copy className="w-3 h-3" />
                     Copy
                   </button>
                 </div>
-                <pre className="m-0 p-2 bg-gray-900 rounded-b-lg overflow-x-auto">
-                  <code
-                    className={`hljs language-${block.language}`}
-                    dangerouslySetInnerHTML={{ __html: highlightedCode }}
-                  />
+                <pre className="m-0 p-3 bg-indigo-950/80 text-gray-200 rounded-b-lg overflow-x-auto backdrop-blur-md">
+                  <code>{block.content}</code>
                 </pre>
               </div>
             );
           }
 
-          // Process markdown and bold important text (between **)
-          const html = marked(
-            block.content.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
-          );
           return (
             <div
               key={index}
-              dangerouslySetInnerHTML={{ __html: html }}
-              className="my-1 break-words"
-            />
+              className="my-1 break-words whitespace-pre-wrap text-sm sm:text-base"
+            >
+              {block.content.split("\n").map((line, i) => (
+                <React.Fragment key={i}>
+                  {line}
+                  {i < block.content.split("\n").length - 1 && <br />}
+                </React.Fragment>
+              ))}
+            </div>
           );
         })}
       </div>
     );
   };
 
-  const formatTime = (date: Date) => {
-    return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-  };
-
-  return (
-    <div className="flex flex-col h-full bg-gradient-to-br from-white/20 to-white/10 dark:from-gray-900/20 dark:to-gray-900/10 backdrop-blur-2xl rounded-xl overflow-hidden border border-white/30 dark:border-gray-700/30 shadow-xl">
-      {/* Header */}
-      <div className="flex items-center justify-between p-3 bg-white/30 dark:bg-gray-800/30 backdrop-blur-lg border-b border-white/30 dark:border-gray-700/30">
-        <div className="flex items-center gap-2">
-          <div className="p-2 rounded-lg bg-blue-500/20 backdrop-blur-sm">
-            <Bot className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-          </div>
-          <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
-            Gemini Chat
-          </h2>
+  // Chat header component
+  const ChatHeader = () => (
+    <div className="flex items-center justify-between p-4 bg-gradient-to-r from-indigo-500/20 via-purple-500/15 to-pink-500/20 backdrop-blur-lg border-b border-white/10">
+      <div className="flex items-center gap-3">
+        <div className="p-2 rounded-full bg-gradient-to-br from-indigo-500/30 to-purple-500/30 backdrop-blur-md shadow-lg border border-white/20">
+          <Bot className="w-5 h-5 text-white" />
         </div>
-        <button
-          onClick={startNewConversation}
-          className="p-2 rounded-lg flex items-center gap-1 bg-gradient-to-r from-blue-500/90 to-blue-600/90 text-white text-sm hover:from-blue-600/90 hover:to-blue-700/90 transition-all backdrop-blur-sm shadow-sm"
-          title="New Conversation"
-        >
-          <Plus className="w-4 h-4" />
-          <span className="hidden sm:inline">New chat</span>
-        </button>
+        <h2 className="text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-500">
+          AI Assistant
+        </h2>
       </div>
+      <button
+        onClick={startNewConversation}
+        className="p-2 rounded-xl flex items-center gap-2 bg-gradient-to-r from-indigo-500/80 to-purple-500/80 text-white text-sm hover:from-indigo-600/80 hover:to-purple-600/80 transition-all duration-300 backdrop-blur-md border border-white/10 shadow-md"
+        title="New Conversation"
+      >
+        <Plus className="w-4 h-4" />
+        <span className="hidden sm:inline">New chat</span>
+      </button>
+    </div>
+  );
 
-      {/* Chat area */}
-      <div className="flex-1 overflow-y-auto p-3 space-y-3 scrollbar-thin scrollbar-thumb-gray-400/20 scrollbar-track-transparent">
-        {messages.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full text-gray-600 dark:text-gray-300 p-4">
-            <div className="w-16 h-16 mb-4 flex items-center justify-center bg-white/30 dark:bg-gray-800/50 rounded-full shadow-md backdrop-blur-sm border border-white/30">
-              <Bot className="w-7 h-7 text-gray-600 dark:text-gray-300" />
-            </div>
-            <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-2 text-center">
-              How can I help you today?
-            </h3>
-            <p className="text-center max-w-md text-sm text-gray-600 dark:text-gray-300 mb-6">
-              Ask me anything about coding, algorithms, or tech. I can explain
-              concepts, help debug code, or suggest solutions.
-            </p>
-            <div className="grid grid-cols-1 gap-2 w-full max-w-md">
-              {[
-                "What's the optimal solution for the 3Sum problem in Java?",
-                "Explain React hooks with examples",
-                "Python best practices for clean code",
-                "How to optimize SQL queries?",
-              ].map((prompt, i) => (
-                <div
-                  key={i}
-                  className="p-2 rounded-lg cursor-pointer bg-white/40 dark:bg-gray-800/50 hover:bg-white/60 dark:hover:bg-gray-700/60 transition-all backdrop-blur-sm border border-white/30 dark:border-gray-700/30 shadow-sm"
-                  onClick={() => setInput(prompt)}
-                >
-                  <p className="text-sm font-medium text-gray-800 dark:text-gray-200">
-                    {prompt.split("?")[0].substring(0, 30)}...
-                  </p>
-                </div>
-              ))}
-            </div>
+  // Chat messages component
+  const ChatMessages = () => (
+    <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      {messages.length === 0 ? (
+        <div className="flex flex-col items-center justify-center h-full text-white/90 p-4">
+          <div className="w-16 h-16 mb-4 flex items-center justify-center bg-white/10 rounded-full shadow-md backdrop-blur-sm border border-white/20">
+            <Bot className="w-7 h-7 text-white/90" />
           </div>
-        ) : (
-          <>
-            {messages.map((message) => (
+          <h3 className="text-xl font-bold mb-2 text-center text-white">
+            How can I help you today?
+          </h3>
+          <p className="text-center max-w-md text-sm text-white/80 mb-6">
+            Ask me anything about coding, algorithms, or tech. I can explain
+            concepts, help debug code, or suggest solutions.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full max-w-md">
+            {[
+              "Explain React hooks with examples",
+              "What's the best way to optimize images for web?",
+              "How do I implement a search algorithm?",
+              "Design patterns for scalable applications",
+            ].map((prompt, i) => (
               <div
-                key={message.id}
-                className={`flex ${
-                  message.role === "user" ? "justify-end" : "justify-start"
-                }`}
+                key={i}
+                className="p-3 rounded-lg cursor-pointer bg-white/10 hover:bg-white/15 transition-all duration-300 backdrop-blur-sm border border-white/15 shadow-sm"
+                onClick={() => setInput(prompt)}
               >
-                <div
-                  className={`max-w-[90%] rounded-xl p-3 backdrop-blur-sm ${
-                    message.role === "user"
-                      ? "bg-blue-500/10 text-gray-800 dark:text-white border border-blue-500/30 shadow-sm"
-                      : "bg-white/30 dark:bg-gray-800/50 text-gray-800 dark:text-gray-200 border border-white/30 dark:border-gray-700/30 shadow-sm"
-                  }`}
-                >
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm font-medium">
-                      {message.role === "user" ? "You" : "Gemini"}
-                    </span>
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs opacity-70">
-                        {formatTime(message.timestamp)}
-                      </span>
-                      {message.role === "assistant" && (
-                        <button
-                          onClick={() => toggleSpeech(message)}
-                          className={`p-1 rounded-full ${
-                            isSpeaking && speechMessageId === message.id
-                              ? "text-red-500"
-                              : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
-                          }`}
-                          title={
-                            isSpeaking && speechMessageId === message.id
-                              ? "Stop reading"
-                              : "Read aloud"
-                          }
-                        >
-                          {isSpeaking && speechMessageId === message.id ? (
-                            <VolumeX className="w-3 h-3" />
-                          ) : (
-                            <Volume2 className="w-3 h-3" />
-                          )}
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                  {renderMessageContent(message.content)}
-                </div>
+                <p className="text-sm font-medium text-white/90">{prompt}</p>
               </div>
             ))}
-          </>
-        )}
-        {isLoading && (
-          <div className="flex justify-start">
-            <div className="max-w-[90%] rounded-xl p-3 bg-white/30 dark:bg-gray-800/50 backdrop-blur-sm border border-white/30 dark:border-gray-700/30 shadow-sm">
-              <div className="flex items-center gap-3">
-                <div className="w-6 h-6 rounded-full flex items-center justify-center bg-white/30 dark:bg-gray-700/50">
-                  <Bot className="w-3 h-3 text-gray-600 dark:text-gray-300" />
+          </div>
+        </div>
+      ) : (
+        <>
+          {messages.map((message) => (
+            <div
+              key={message.id}
+              className={`flex ${
+                message.role === "user" ? "justify-end" : "justify-start"
+              }`}
+            >
+              <div
+                className={`w-full sm:max-w-[90%] rounded-xl p-4 backdrop-blur-sm transition-all duration-300 ${
+                  message.role === "user"
+                    ? "bg-indigo-600/20 text-white border border-indigo-500/30 shadow-sm"
+                    : "bg-white/10 text-white border border-white/15 shadow-md"
+                }`}
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium flex items-center gap-2">
+                    {message.role === "user" ? (
+                      "You"
+                    ) : (
+                      <>
+                        <Bot className="w-4 h-4" /> Gemini
+                      </>
+                    )}
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs opacity-70">
+                      {formatTime(message.timestamp)}
+                    </span>
+                    {message.role === "assistant" && (
+                      <button
+                        onClick={() => toggleSpeech(message)}
+                        className={`p-1 rounded-full ${
+                          isSpeaking && speechMessageId === message.id
+                            ? "text-pink-400 bg-pink-500/20"
+                            : "text-white/70 hover:text-white/90 hover:bg-white/10"
+                        } transition-all duration-300`}
+                        title={
+                          isSpeaking && speechMessageId === message.id
+                            ? "Stop reading"
+                            : "Read aloud"
+                        }
+                      >
+                        {isSpeaking && speechMessageId === message.id ? (
+                          <VolumeX className="w-4 h-4" />
+                        ) : (
+                          <Volume2 className="w-4 h-4" />
+                        )}
+                      </button>
+                    )}
+                  </div>
                 </div>
-                <div className="flex space-x-2">
-                  <div className="w-2 h-2 bg-gray-600 dark:bg-gray-300 rounded-full animate-bounce"></div>
-                  <div
-                    className="w-2 h-2 bg-gray-600 dark:bg-gray-300 rounded-full animate-bounce"
-                    style={{ animationDelay: "0.2s" }}
-                  ></div>
-                  <div
-                    className="w-2 h-2 bg-gray-600 dark:bg-gray-300 rounded-full animate-bounce"
-                    style={{ animationDelay: "0.4s" }}
-                  ></div>
-                </div>
+                {renderMessageContent(message.content)}
+              </div>
+            </div>
+          ))}
+        </>
+      )}
+      {isLoading && (
+        <div className="flex justify-start">
+          <div className="w-full sm:max-w-[90%] rounded-xl p-4 bg-white/10 backdrop-blur-sm border border-white/15 shadow-sm">
+            <div className="flex items-center gap-3">
+              <div className="w-6 h-6 rounded-full flex items-center justify-center bg-white/10">
+                <Bot className="w-3 h-3 text-white/80" />
+              </div>
+              <div className="flex space-x-2">
+                <div className="w-2 h-2 bg-indigo-400 rounded-full animate-bounce"></div>
+                <div
+                  className="w-2 h-2 bg-purple-400 rounded-full animate-bounce"
+                  style={{ animationDelay: "0.2s" }}
+                ></div>
+                <div
+                  className="w-2 h-2 bg-pink-400 rounded-full animate-bounce"
+                  style={{ animationDelay: "0.4s" }}
+                ></div>
               </div>
             </div>
           </div>
-        )}
-        {error && (
-          <div className="text-red-500 dark:text-red-400 text-sm p-3 text-center rounded-lg bg-red-50/50 dark:bg-red-900/20 backdrop-blur-sm border border-red-200 dark:border-red-900/30">
-            {error}
-          </div>
-        )}
-        <div ref={messagesEndRef} />
-      </div>
+        </div>
+      )}
+      {error && (
+        <div className="text-red-300 text-sm p-3 text-center rounded-lg bg-red-500/20 backdrop-blur-sm border border-red-500/30">
+          {error}
+        </div>
+      )}
+      <div ref={messagesEndRef} />
+    </div>
+  );
 
-      {/* Input area */}
-      <form
-        onSubmit={handleSubmit}
-        className="p-3 bg-white/30 dark:bg-gray-800/30 backdrop-blur-lg border-t border-white/30 dark:border-gray-700/30"
-      >
-        <div className="flex items-end gap-2">
-          <div className="flex-1 relative">
-            <textarea
-              ref={textareaRef}
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Type your message or click mic to speak..."
-              className="w-full resize-none rounded-xl px-4 py-3 bg-white/50 dark:bg-gray-700/50 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500/20 border border-white/40 dark:border-gray-600/50 backdrop-blur-sm"
-              rows={1}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.shiftKey) {
-                  e.preventDefault();
-                  handleSubmit(e);
-                }
-              }}
-            />
-            <button
-              type="button"
-              onClick={toggleListening}
-              className={`absolute right-2 bottom-2 p-1 rounded-full ${
-                isListening
-                  ? "text-white bg-red-500"
-                  : "text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 bg-white/70 dark:bg-gray-600/70 backdrop-blur-sm"
-              }`}
-              title={isListening ? "Stop listening" : "Voice input"}
-            >
-              <Mic className="w-4 h-4" />
-            </button>
-          </div>
-          <button
-            type="submit"
-            disabled={!input.trim() || isLoading}
-            className="p-3 rounded-xl bg-gradient-to-r from-blue-500/90 to-blue-600/90 text-white hover:from-blue-600/90 hover:to-blue-700/90 disabled:from-gray-400/50 disabled:to-gray-500/50 dark:disabled:from-gray-600/50 dark:disabled:to-gray-700/50 disabled:cursor-not-allowed transition-all backdrop-blur-sm shadow-sm"
-          >
-            {isLoading ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
-            ) : (
-              <Send className="w-4 h-4" />
-            )}
-          </button>
+  // Chat input component
+  const ChatInput = () => (
+    <form
+      onSubmit={handleSubmit}
+      className="p-4 bg-gradient-to-r from-indigo-500/20 via-purple-500/15 to-pink-500/20 backdrop-blur-lg border-t border-white/10"
+    >
+      <div className="flex items-end gap-2">
+        <div className="relative flex-1">
+          <textarea
+            ref={textareaRef}
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Type your message..."
+            className="w-full resize-none rounded-xl px-4 py-3 bg-white/10 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/30 border border-white/20 backdrop-blur-md"
+            rows={1}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                handleSubmit(e);
+              }
+            }}
+          />
         </div>
-        <div className="flex justify-between items-center mt-2 px-1">
-          <p className="text-xs text-gray-500/80 dark:text-gray-400/80">
-            Powered by <span className="text-blue-400">Gemini</span>
-          </p>
-          {isSpeaking && (
-            <button
-              onClick={stopAllSpeech}
-              className="text-xs flex items-center gap-1 text-red-500 hover:text-red-600 dark:text-red-400 px-2 py-1 rounded-full"
-            >
-              <VolumeX className="w-3 h-3" />
-              Stop reading
-            </button>
+        <button
+          type="button"
+          onClick={toggleListening}
+          className={`p-3 rounded-xl ${
+            isListening
+              ? "bg-pink-500/80 text-white"
+              : "bg-white/10 text-white/80 hover:bg-white/15 hover:text-white"
+          } transition-all duration-300 backdrop-blur-md border border-white/15 shadow-md`}
+          title={isListening ? "Stop listening" : "Voice input"}
+        >
+          <Mic className="w-5 h-5" />
+        </button>
+        <button
+          type="submit"
+          disabled={!input.trim() || isLoading}
+          className="p-3 rounded-xl bg-gradient-to-r from-indigo-500/90 to-purple-500/90 text-white hover:from-indigo-600/90 hover:to-purple-600/90 disabled:from-gray-500/50 disabled:to-gray-600/50 disabled:text-white/50 disabled:cursor-not-allowed transition-all duration-300 backdrop-blur-md border border-white/15 shadow-md"
+        >
+          {isLoading ? (
+            <Loader2 className="w-5 h-5 animate-spin" />
+          ) : (
+            <Send className="w-5 h-5" />
           )}
-        </div>
-      </form>
+        </button>
+      </div>
+      <div className="flex justify-between items-center mt-2 px-1">
+        <p className="text-xs text-white/60">
+          Powered by <span className="text-indigo-300">Gemini</span>
+        </p>
+        {isSpeaking && (
+          <button
+            onClick={stopAllSpeech}
+            className="text-xs flex items-center gap-1 text-pink-300 hover:text-pink-200 px-2 py-1 rounded-full transition-colors duration-300"
+          >
+            <VolumeX className="w-3 h-3" />
+            Stop reading
+          </button>
+        )}
+      </div>
+    </form>
+  );
+
+  return (
+    <div className="flex flex-col h-[90vh] w-full max-w-4xl bg-gradient-to-br from-white/10 to-white/5 dark:from-purple-900/10 dark:via-indigo-900/10 dark:to-blue-900/10 backdrop-blur-xl rounded-2xl overflow-hidden border border-white/20 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.1)] transition-all duration-300">
+      <ChatHeader />
+      <ChatMessages />
+      <ChatInput />
     </div>
   );
 };
