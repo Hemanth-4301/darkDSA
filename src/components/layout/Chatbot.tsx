@@ -1,4 +1,10 @@
-import React, { useState, useRef, useEffect } from "react";
+"use client";
+
+import type React from "react";
+import { useState, useRef, useEffect } from "react";
+import { marked } from "marked";
+import hljs from "highlight.js";
+import "highlight.js/styles/atom-one-dark.css";
 import {
   Copy,
   Send,
@@ -9,7 +15,22 @@ import {
   Mic,
   Plus,
 } from "lucide-react";
-import { Message, CodeBlock } from "./types";
+
+// Configure marked to use highlight.js for code blocks
+marked.setOptions({
+  highlight: (code, lang) => {
+    const language = hljs.getLanguage(lang) ? lang : "plaintext";
+    return hljs.highlight(code, { language }).value;
+  },
+  langPrefix: "hljs language-",
+});
+
+interface Message {
+  id: string;
+  role: "user" | "assistant";
+  content: string;
+  timestamp: Date;
+}
 
 const Chatbot: React.FC = () => {
   const [input, setInput] = useState("");
@@ -184,7 +205,7 @@ const Chatbot: React.FC = () => {
     const toast = document.createElement("div");
     toast.textContent = "Copied to clipboard!";
     toast.className =
-      "fixed bottom-4 right-4 bg-gradient-to-r from-blue-600/90 to-blue-700/90 text-white px-4 py-2 rounded-lg shadow-lg z-50 backdrop-blur-md";
+      "fixed bottom-4 right-4 bg-gradient-to-r from-purple-500/90 to-pink-500/90 text-white px-4 py-2 rounded-xl shadow-lg z-50 backdrop-blur-sm border border-white/20";
     document.body.appendChild(toast);
     setTimeout(() => toast.remove(), 2000);
   };
@@ -243,9 +264,9 @@ const Chatbot: React.FC = () => {
     };
   }, []);
 
-  const extractCodeBlocks = (content: string): CodeBlock[] => {
+  const extractCodeBlocks = (content: string) => {
     const codeBlockRegex = /```(\w+)?\n([\s\S]*?)\n```/g;
-    const blocks: CodeBlock[] = [];
+    const blocks = [];
     let match;
     let lastIndex = 0;
 
@@ -276,269 +297,281 @@ const Chatbot: React.FC = () => {
     return blocks.length ? blocks : [{ type: "text", content }];
   };
 
-  // Format timestamp
-  const formatTime = (date: Date) => {
-    return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-  };
-
-  // Render the message content with proper formatting
   const renderMessageContent = (content: string) => {
     const blocks = extractCodeBlocks(content);
 
     return (
-      <div className="prose dark:prose-invert max-w-full">
+      <div className="prose prose-slate max-w-full prose-headings:text-slate-800 prose-p:text-slate-700 prose-strong:text-slate-800 prose-code:text-purple-600 prose-pre:bg-transparent prose-pre:p-0">
         {blocks.map((block, index) => {
           if (block.type === "code") {
+            const highlightedCode = hljs.highlight(block.content, {
+              language: block.language,
+            }).value;
+
             return (
-              <div key={index} className="relative my-2">
-                <div className="flex justify-between items-center bg-indigo-900/70 text-white px-3 py-1 text-xs rounded-t-lg backdrop-blur-md">
-                  <span>{block.language || "code"}</span>
+              <div key={index} className="relative my-4">
+                <div className="flex justify-between items-center bg-gradient-to-r from-slate-800 to-slate-900 text-slate-300 px-4 py-2 text-sm rounded-t-xl border border-slate-700/50">
+                  <span className="font-medium">
+                    {block.language || "code"}
+                  </span>
                   <button
                     onClick={() => copyToClipboard(block.content)}
-                    className="flex items-center gap-1 hover:text-blue-200 transition-colors"
+                    className="flex items-center gap-2 hover:text-white transition-colors duration-200 px-2 py-1 rounded-lg hover:bg-white/10"
                   >
-                    <Copy className="w-3 h-3" />
+                    <Copy className="w-4 h-4" />
                     Copy
                   </button>
                 </div>
-                <pre className="m-0 p-3 bg-indigo-950/80 text-gray-200 rounded-b-lg overflow-x-auto backdrop-blur-md">
-                  <code>{block.content}</code>
+                <pre className="m-0 p-4 bg-slate-900 rounded-b-xl overflow-x-auto border-x border-b border-slate-700/50">
+                  <code
+                    className={`hljs language-${block.language}`}
+                    dangerouslySetInnerHTML={{ __html: highlightedCode }}
+                  />
                 </pre>
               </div>
             );
           }
 
+          // Process markdown and bold important text (between **)
+          const html = marked(
+            block.content.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+          );
           return (
             <div
               key={index}
-              className="my-1 break-words whitespace-pre-wrap text-sm sm:text-base"
-            >
-              {block.content.split("\n").map((line, i) => (
-                <React.Fragment key={i}>
-                  {line}
-                  {i < block.content.split("\n").length - 1 && <br />}
-                </React.Fragment>
-              ))}
-            </div>
+              dangerouslySetInnerHTML={{ __html: html }}
+              className="my-2 break-words"
+            />
           );
         })}
       </div>
     );
   };
 
-  // Chat header component
-  const ChatHeader = () => (
-    <div className="flex items-center justify-between p-4 bg-gradient-to-r from-indigo-500/20 via-purple-500/15 to-pink-500/20 backdrop-blur-lg border-b border-white/10">
-      <div className="flex items-center gap-3">
-        <div className="p-2 rounded-full bg-gradient-to-br from-indigo-500/30 to-purple-500/30 backdrop-blur-md shadow-lg border border-white/20">
-          <Bot className="w-5 h-5 text-white" />
-        </div>
-        <h2 className="text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-500">
-          AI Assistant
-        </h2>
-      </div>
-      <button
-        onClick={startNewConversation}
-        className="p-2 rounded-xl flex items-center gap-2 bg-gradient-to-r from-indigo-500/80 to-purple-500/80 text-white text-sm hover:from-indigo-600/80 hover:to-purple-600/80 transition-all duration-300 backdrop-blur-md border border-white/10 shadow-md"
-        title="New Conversation"
-      >
-        <Plus className="w-4 h-4" />
-        <span className="hidden sm:inline">New chat</span>
-      </button>
-    </div>
-  );
-
-  // Chat messages component
-  const ChatMessages = () => (
-    <div className="flex-1 overflow-y-auto p-4 space-y-4">
-      {messages.length === 0 ? (
-        <div className="flex flex-col items-center justify-center h-full text-white/90 p-4">
-          <div className="w-16 h-16 mb-4 flex items-center justify-center bg-white/10 rounded-full shadow-md backdrop-blur-sm border border-white/20">
-            <Bot className="w-7 h-7 text-white/90" />
-          </div>
-          <h3 className="text-xl font-bold mb-2 text-center text-white">
-            How can I help you today?
-          </h3>
-          <p className="text-center max-w-md text-sm text-white/80 mb-6">
-            Ask me anything about coding, algorithms, or tech. I can explain
-            concepts, help debug code, or suggest solutions.
-          </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full max-w-md">
-            {[
-              "Explain React hooks with examples",
-              "What's the best way to optimize images for web?",
-              "How do I implement a search algorithm?",
-              "Design patterns for scalable applications",
-            ].map((prompt, i) => (
-              <div
-                key={i}
-                className="p-3 rounded-lg cursor-pointer bg-white/10 hover:bg-white/15 transition-all duration-300 backdrop-blur-sm border border-white/15 shadow-sm"
-                onClick={() => setInput(prompt)}
-              >
-                <p className="text-sm font-medium text-white/90">{prompt}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      ) : (
-        <>
-          {messages.map((message) => (
-            <div
-              key={message.id}
-              className={`flex ${
-                message.role === "user" ? "justify-end" : "justify-start"
-              }`}
-            >
-              <div
-                className={`w-full sm:max-w-[90%] rounded-xl p-4 backdrop-blur-sm transition-all duration-300 ${
-                  message.role === "user"
-                    ? "bg-indigo-600/20 text-white border border-indigo-500/30 shadow-sm"
-                    : "bg-white/10 text-white border border-white/15 shadow-md"
-                }`}
-              >
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium flex items-center gap-2">
-                    {message.role === "user" ? (
-                      "You"
-                    ) : (
-                      <>
-                        <Bot className="w-4 h-4" /> Gemini
-                      </>
-                    )}
-                  </span>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs opacity-70">
-                      {formatTime(message.timestamp)}
-                    </span>
-                    {message.role === "assistant" && (
-                      <button
-                        onClick={() => toggleSpeech(message)}
-                        className={`p-1 rounded-full ${
-                          isSpeaking && speechMessageId === message.id
-                            ? "text-pink-400 bg-pink-500/20"
-                            : "text-white/70 hover:text-white/90 hover:bg-white/10"
-                        } transition-all duration-300`}
-                        title={
-                          isSpeaking && speechMessageId === message.id
-                            ? "Stop reading"
-                            : "Read aloud"
-                        }
-                      >
-                        {isSpeaking && speechMessageId === message.id ? (
-                          <VolumeX className="w-4 h-4" />
-                        ) : (
-                          <Volume2 className="w-4 h-4" />
-                        )}
-                      </button>
-                    )}
-                  </div>
-                </div>
-                {renderMessageContent(message.content)}
-              </div>
-            </div>
-          ))}
-        </>
-      )}
-      {isLoading && (
-        <div className="flex justify-start">
-          <div className="w-full sm:max-w-[90%] rounded-xl p-4 bg-white/10 backdrop-blur-sm border border-white/15 shadow-sm">
-            <div className="flex items-center gap-3">
-              <div className="w-6 h-6 rounded-full flex items-center justify-center bg-white/10">
-                <Bot className="w-3 h-3 text-white/80" />
-              </div>
-              <div className="flex space-x-2">
-                <div className="w-2 h-2 bg-indigo-400 rounded-full animate-bounce"></div>
-                <div
-                  className="w-2 h-2 bg-purple-400 rounded-full animate-bounce"
-                  style={{ animationDelay: "0.2s" }}
-                ></div>
-                <div
-                  className="w-2 h-2 bg-pink-400 rounded-full animate-bounce"
-                  style={{ animationDelay: "0.4s" }}
-                ></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-      {error && (
-        <div className="text-red-300 text-sm p-3 text-center rounded-lg bg-red-500/20 backdrop-blur-sm border border-red-500/30">
-          {error}
-        </div>
-      )}
-      <div ref={messagesEndRef} />
-    </div>
-  );
-
-  // Chat input component
-  const ChatInput = () => (
-    <form
-      onSubmit={handleSubmit}
-      className="p-4 bg-gradient-to-r from-indigo-500/20 via-purple-500/15 to-pink-500/20 backdrop-blur-lg border-t border-white/10"
-    >
-      <div className="flex items-end gap-2">
-        <div className="relative flex-1">
-          <textarea
-            ref={textareaRef}
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Type your message..."
-            className="w-full resize-none rounded-xl px-4 py-3 bg-white/10 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/30 border border-white/20 backdrop-blur-md"
-            rows={1}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault();
-                handleSubmit(e);
-              }
-            }}
-          />
-        </div>
-        <button
-          type="button"
-          onClick={toggleListening}
-          className={`p-3 rounded-xl ${
-            isListening
-              ? "bg-pink-500/80 text-white"
-              : "bg-white/10 text-white/80 hover:bg-white/15 hover:text-white"
-          } transition-all duration-300 backdrop-blur-md border border-white/15 shadow-md`}
-          title={isListening ? "Stop listening" : "Voice input"}
-        >
-          <Mic className="w-5 h-5" />
-        </button>
-        <button
-          type="submit"
-          disabled={!input.trim() || isLoading}
-          className="p-3 rounded-xl bg-gradient-to-r from-indigo-500/90 to-purple-500/90 text-white hover:from-indigo-600/90 hover:to-purple-600/90 disabled:from-gray-500/50 disabled:to-gray-600/50 disabled:text-white/50 disabled:cursor-not-allowed transition-all duration-300 backdrop-blur-md border border-white/15 shadow-md"
-        >
-          {isLoading ? (
-            <Loader2 className="w-5 h-5 animate-spin" />
-          ) : (
-            <Send className="w-5 h-5" />
-          )}
-        </button>
-      </div>
-      <div className="flex justify-between items-center mt-2 px-1">
-        <p className="text-xs text-white/60">
-          Powered by <span className="text-indigo-300">Gemini</span>
-        </p>
-        {isSpeaking && (
-          <button
-            onClick={stopAllSpeech}
-            className="text-xs flex items-center gap-1 text-pink-300 hover:text-pink-200 px-2 py-1 rounded-full transition-colors duration-300"
-          >
-            <VolumeX className="w-3 h-3" />
-            Stop reading
-          </button>
-        )}
-      </div>
-    </form>
-  );
+  const formatTime = (date: Date) => {
+    return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  };
 
   return (
-    <div className="flex flex-col h-[90vh] w-full max-w-4xl bg-gradient-to-br from-white/10 to-white/5 dark:from-purple-900/10 dark:via-indigo-900/10 dark:to-blue-900/10 backdrop-blur-xl rounded-2xl overflow-hidden border border-white/20 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.1)] transition-all duration-300">
-      <ChatHeader />
-      <ChatMessages />
-      <ChatInput />
+    <div className="flex flex-col h-full bg-gradient-to-br from-violet-400/20 via-purple-300/20 to-indigo-400/20 backdrop-blur-3xl rounded-2xl overflow-hidden border border-white/30 shadow-2xl relative">
+      {/* Animated background gradient */}
+      <div className="absolute inset-0 bg-gradient-to-br from-pink-400/10 via-purple-400/10 to-cyan-400/10 animate-pulse"></div>
+      <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent"></div>
+
+      {/* Header */}
+      <div className="relative z-10 flex items-center justify-between p-4 bg-gradient-to-r from-white/25 via-white/20 to-white/25 backdrop-blur-xl border-b border-white/30">
+        <div className="flex items-center gap-3">
+          <div className="p-3 rounded-2xl bg-gradient-to-br from-violet-500/30 to-purple-600/30 backdrop-blur-sm border border-white/30 shadow-lg">
+            <Bot className="w-6 h-6 text-violet-700" />
+          </div>
+          <div>
+            <h2 className="text-xl font-bold bg-gradient-to-r from-violet-700 to-purple-700 bg-clip-text text-transparent">
+              AI Assistant
+            </h2>
+            <p className="text-sm text-slate-600">Powered by Gemini</p>
+          </div>
+        </div>
+        <button
+          onClick={startNewConversation}
+          className="px-4 py-2 rounded-xl flex items-center gap-2 bg-gradient-to-r from-violet-500/80 to-purple-600/80 text-white text-sm hover:from-violet-600/90 hover:to-purple-700/90 transition-all duration-300 backdrop-blur-sm shadow-lg border border-white/20 hover:scale-105"
+          title="New Conversation"
+        >
+          <Plus className="w-4 h-4" />
+          <span className="hidden sm:inline">New Chat</span>
+        </button>
+      </div>
+
+      {/* Chat area */}
+      <div className="relative z-10 flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent">
+        {messages.length === 0 ? (
+          <div className="flex flex-col items-center justify-center h-full text-slate-700 p-6">
+            <div className="w-20 h-20 mb-6 flex items-center justify-center bg-gradient-to-br from-violet-400/30 to-purple-500/30 rounded-3xl shadow-xl backdrop-blur-sm border border-white/30">
+              <Bot className="w-10 h-10 text-violet-700" />
+            </div>
+            <h3 className="text-2xl font-bold bg-gradient-to-r from-violet-700 to-purple-700 bg-clip-text text-transparent mb-3 text-center">
+              How can I help you today?
+            </h3>
+            <p className="text-center max-w-md text-slate-600 mb-8 leading-relaxed">
+              Ask me anything about coding, algorithms, or tech. I can explain
+              concepts, help debug code, or suggest solutions.
+            </p>
+            <div className="grid grid-cols-1 gap-3 w-full max-w-lg">
+              {[
+                "What's the optimal solution for the 3Sum problem in Java?",
+                "Explain React hooks with examples",
+                "Python best practices for clean code",
+                "How to optimize SQL queries?",
+              ].map((prompt, i) => (
+                <div
+                  key={i}
+                  className="p-4 rounded-xl cursor-pointer bg-gradient-to-r from-white/40 to-white/30 hover:from-white/50 hover:to-white/40 transition-all duration-300 backdrop-blur-sm border border-white/30 shadow-lg hover:shadow-xl hover:scale-[1.02]"
+                  onClick={() => setInput(prompt)}
+                >
+                  <p className="text-sm font-medium text-slate-700 leading-relaxed">
+                    {prompt.split("?")[0].substring(0, 40)}...
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <>
+            {messages.map((message) => (
+              <div
+                key={message.id}
+                className={`flex ${
+                  message.role === "user" ? "justify-end" : "justify-start"
+                }`}
+              >
+                <div
+                  className={`w-full sm:max-w-[85%] md:max-w-[80%] lg:max-w-[75%] rounded-2xl p-4 backdrop-blur-sm border shadow-lg ${
+                    message.role === "user"
+                      ? "bg-gradient-to-br from-violet-500/20 to-purple-600/20 border-violet-300/30 text-slate-800"
+                      : "bg-gradient-to-br from-white/40 to-white/30 border-white/40 text-slate-800"
+                  }`}
+                >
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-sm font-semibold text-slate-700">
+                      {message.role === "user" ? "You" : "AI Assistant"}
+                    </span>
+                    <div className="flex items-center gap-3">
+                      <span className="text-xs text-slate-500">
+                        {formatTime(message.timestamp)}
+                      </span>
+                      {message.role === "assistant" && (
+                        <button
+                          onClick={() => toggleSpeech(message)}
+                          className={`p-2 rounded-full transition-all duration-200 ${
+                            isSpeaking && speechMessageId === message.id
+                              ? "text-red-500 bg-red-100/50"
+                              : "text-slate-500 hover:text-slate-700 hover:bg-white/30"
+                          }`}
+                          title={
+                            isSpeaking && speechMessageId === message.id
+                              ? "Stop reading"
+                              : "Read aloud"
+                          }
+                        >
+                          {isSpeaking && speechMessageId === message.id ? (
+                            <VolumeX className="w-4 h-4" />
+                          ) : (
+                            <Volume2 className="w-4 h-4" />
+                          )}
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                  {renderMessageContent(message.content)}
+                </div>
+              </div>
+            ))}
+          </>
+        )}
+        {isLoading && (
+          <div className="flex justify-start">
+            <div className="w-full sm:max-w-[85%] md:max-w-[80%] lg:max-w-[75%] rounded-2xl p-4 bg-gradient-to-br from-white/40 to-white/30 backdrop-blur-sm border border-white/40 shadow-lg">
+              <div className="flex items-center gap-4">
+                <div className="w-8 h-8 rounded-full flex items-center justify-center bg-gradient-to-br from-violet-400/30 to-purple-500/30">
+                  <Bot className="w-4 h-4 text-violet-700" />
+                </div>
+                <div className="flex space-x-2">
+                  <div className="w-3 h-3 bg-violet-500 rounded-full animate-bounce"></div>
+                  <div
+                    className="w-3 h-3 bg-purple-500 rounded-full animate-bounce"
+                    style={{ animationDelay: "0.2s" }}
+                  ></div>
+                  <div
+                    className="w-3 h-3 bg-indigo-500 rounded-full animate-bounce"
+                    style={{ animationDelay: "0.4s" }}
+                  ></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+        {error && (
+          <div className="text-red-600 text-sm p-4 text-center rounded-xl bg-gradient-to-r from-red-100/60 to-pink-100/60 backdrop-blur-sm border border-red-200/50 shadow-lg">
+            {error}
+          </div>
+        )}
+        <div ref={messagesEndRef} />
+      </div>
+
+      {/* Input area */}
+      <form
+        onSubmit={handleSubmit}
+        className="relative z-10 p-4 bg-gradient-to-r from-white/25 via-white/20 to-white/25 backdrop-blur-xl border-t border-white/30"
+      >
+        <div className="flex flex-col sm:flex-row items-end gap-3">
+          {/* Text input */}
+          <div className="flex-1 w-full">
+            <textarea
+              ref={textareaRef}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Type your message here..."
+              className="w-full resize-none rounded-2xl px-6 py-4 bg-gradient-to-r from-white/60 to-white/50 text-slate-800 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-400/50 border border-white/50 backdrop-blur-sm shadow-lg transition-all duration-300 focus:shadow-xl"
+              rows={1}
+              style={{ minHeight: "56px", maxHeight: "120px" }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSubmit(e);
+                }
+              }}
+            />
+          </div>
+
+          {/* Action buttons */}
+          <div className="flex items-center gap-2 w-full sm:w-auto justify-center sm:justify-start">
+            <button
+              type="button"
+              onClick={toggleListening}
+              className={`p-4 rounded-2xl transition-all duration-300 shadow-lg ${
+                isListening
+                  ? "text-white bg-gradient-to-r from-red-500 to-red-600 shadow-red-200"
+                  : "text-slate-600 bg-gradient-to-r from-white/60 to-white/50 hover:from-white/70 hover:to-white/60 backdrop-blur-sm border border-white/50"
+              }`}
+              title={isListening ? "Stop listening" : "Voice input"}
+            >
+              <Mic className="w-5 h-5" />
+            </button>
+            <button
+              type="submit"
+              disabled={!input.trim() || isLoading}
+              className="p-4 rounded-2xl bg-gradient-to-r from-violet-500 to-purple-600 text-white hover:from-violet-600 hover:to-purple-700 disabled:from-slate-400 disabled:to-slate-500 disabled:cursor-not-allowed transition-all duration-300 backdrop-blur-sm shadow-lg hover:shadow-xl hover:scale-105 disabled:hover:scale-100"
+            >
+              {isLoading ? (
+                <Loader2 className="w-5 h-5 animate-spin" />
+              ) : (
+                <Send className="w-5 h-5" />
+              )}
+            </button>
+          </div>
+        </div>
+
+        {/* Footer info */}
+        <div className="flex justify-between items-center mt-3 px-2">
+          <p className="text-xs text-slate-500">
+            Press{" "}
+            <kbd className="px-2 py-1 bg-white/30 rounded text-xs">Enter</kbd>{" "}
+            to send,{" "}
+            <kbd className="px-2 py-1 bg-white/30 rounded text-xs">
+              Shift+Enter
+            </kbd>{" "}
+            for new line
+          </p>
+          {isSpeaking && (
+            <button
+              onClick={stopAllSpeech}
+              className="text-xs flex items-center gap-2 text-red-500 hover:text-red-600 px-3 py-1 rounded-full bg-white/30 hover:bg-white/40 transition-all duration-200"
+            >
+              <VolumeX className="w-3 h-3" />
+              Stop reading
+            </button>
+          )}
+        </div>
+      </form>
     </div>
   );
 };
