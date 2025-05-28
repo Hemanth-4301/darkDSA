@@ -357,7 +357,7 @@ const Chatbot: React.FC = () => {
       <div className="relative z-10 flex items-center justify-between p-3 sm:p-4 bg-gradient-to-r from-white/25 via-white/20 to-white/25 dark:from-gray-900/40 dark:via-gray-800/40 dark:to-gray-900/40 backdrop-blur-xl border-b border-white/30 dark:border-white/20">
         <div className="flex items-center gap-2 sm:gap-3">
           <div className="p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-gradient-to-br from-violet-500/30 to-purple-600/30 backdrop-blur-sm border border-white/30 shadow-lg">
-            <Bot className="w-5 h-5 sm:w-6 sm:h-6 text-violet-700 dark:text-violet-300" />
+            <Bot className="w-5 h-5 sm:w-6 sm:h-6 text-violet-700 dark:text-violet-300 animate-bounce-slow" />
           </div>
           <div>
             <h2 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-violet-700 to-purple-700 dark:from-violet-300 dark:to-purple-300 bg-clip-text text-transparent">
@@ -383,7 +383,7 @@ const Chatbot: React.FC = () => {
         {messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-gray-700 dark:text-gray-200 p-4 sm:p-6">
             <div className="w-16 h-16 sm:w-20 sm:h-20 mb-4 sm:mb-6 flex items-center justify-center bg-gradient-to-br from-violet-400/30 to-purple-500/30 rounded-2xl sm:rounded-3xl shadow-xl backdrop-blur-sm border border-white/30">
-              <Bot className="w-8 h-8 sm:w-10 sm:h-10 text-violet-700 dark:text-violet-300" />
+              <Bot className="w-8 h-8 sm:w-10 sm:h-10 text-violet-700 dark:text-violet-300 animate-bounce-slow" />
             </div>
             <h3 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-violet-700 to-purple-700 dark:from-violet-300 dark:to-purple-300 bg-clip-text text-transparent mb-2 sm:mb-3 text-center">
               How can I help you today?
