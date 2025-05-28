@@ -17,9 +17,9 @@ function App() {
             path="/category/:categoryId/question/:questionId"
             element={<QuestionPage />}
           />
-
-          <Route path="/chatbot" element={<Chatbot />} />
           <Route path="/compiler" element={<JavaCompiler />} />
+          <Route path="/chatbot" element={<Chatbot />} />
+
         </Routes>
       </Layout>
     </Router>
