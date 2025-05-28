@@ -1,5 +1,4 @@
 "use client";
-
 import type React from "react";
 import { useState, useRef, useEffect } from "react";
 import { marked } from "marked";
@@ -15,6 +14,8 @@ import {
   Mic,
   Plus,
 } from "lucide-react";
+const dotenv = require("dotenv");
+dotenv.config();
 
 // Configure marked to use highlight.js for code blocks
 marked.setOptions({
@@ -45,6 +46,7 @@ const Chatbot: React.FC = () => {
   const speechSynthesis = window.speechSynthesis;
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
   const recognitionRef = useRef<any>(null);
+  const apikey = process.env.REACT_APP_gemini_api_key;
 
   const startNewConversation = () => {
     setMessages([]);
@@ -144,12 +146,12 @@ const Chatbot: React.FC = () => {
 
     try {
       const response = await fetch(
-        "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyA0_UI74_D3ALET9H0leTY23Ujamhkrgkw",
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apikey}`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "x-goog-api-key": "AIzaSyA0_UI74_D3ALET9H0leTY23Ujamhkrgkw",
+            "x-goog-api-key": apikey,
           },
           body: JSON.stringify({
             contents: [
@@ -429,7 +431,7 @@ const Chatbot: React.FC = () => {
                   className={`w-full rounded-xl sm:rounded-2xl p-3 sm:p-4 backdrop-blur-sm border shadow-lg ${
                     message.role === "user"
                       ? "bg-gradient-to-br from-violet-500/20 to-purple-600/20 dark:from-violet-600/30 dark:to-purple-700/30 border-violet-300/30 dark:border-violet-400/30 text-gray-800 dark:text-gray-100"
-                      : "dark:bg-black border-white/40 dark:border-white/20 text-gray-800 dark:text-gray-100"
+                      : "dark:bg-black  border-white/40 dark:border-white/20 text-gray-800 dark:text-gray-100"
                   }`}
                 >
                   <div className="flex items-center justify-between mb-2 sm:mb-3">
