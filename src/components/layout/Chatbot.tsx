@@ -98,11 +98,6 @@ const Chatbot: React.FC = () => {
     }
   }, [input]);
 
-  // Scroll to bottom of messages
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
-
   const toggleListening = () => {
     if (isListening) {
       recognitionRef.current.stop();
@@ -514,6 +509,7 @@ const Chatbot: React.FC = () => {
               placeholder="Type your message here..."
               className="w-full resize-none rounded-xl sm:rounded-2xl px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-white/60 to-white/50 dark:from-gray-700/60 dark:to-gray-600/60 text-gray-800 dark:text-black placeholder-gray-500 dark:placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-violet-400/50 border border-white/50 dark:border-white/30 backdrop-blur-sm shadow-lg transition-all duration-300 focus:shadow-xl"
               rows={1}
+              autoFocus={false}
               style={{ minHeight: "48px", maxHeight: "120px" }}
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) {

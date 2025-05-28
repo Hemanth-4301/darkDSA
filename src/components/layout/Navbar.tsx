@@ -19,11 +19,6 @@ const Navbar: React.FC = () => {
   const navLinks = [
     { to: "/", text: "Home", show: location.pathname !== "/" },
     {
-      to: "/chatbot",
-      text: "Chatbot",
-      show: location.pathname !== "/chatbot",
-    },
-    {
       to: "/compiler",
       text: "Compiler",
       show: location.pathname !== "/compiler",
