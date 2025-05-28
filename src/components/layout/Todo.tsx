@@ -76,7 +76,7 @@ export default function Todo() {
   }
 
   return (
-    <div className="min-h-screen p-4   dark:bg-gray-900 transition-colors duration-300">
+    <div className="min-h-screen p-1 dark:bg-gray-900 transition-colors duration-300">
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
