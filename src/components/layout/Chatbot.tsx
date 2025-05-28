@@ -322,7 +322,7 @@ const Chatbot: React.FC = () => {
                     <span className="hidden sm:inline">Copy</span>
                   </button>
                 </div>
-                <pre className="m-0 p-3 sm:p-4 bg-slate-900 rounded-b-xl overflow-x-auto border-x border-b border-slate-700/50">
+                <pre className="m-0 p-3 sm:p-4 bg-black rounded-b-xl overflow-x-auto border-x border-b border-slate-700/50">
                   <code
                     className={`hljs language-${block.language}`}
                     dangerouslySetInnerHTML={{ __html: highlightedCode }}
@@ -429,7 +429,7 @@ const Chatbot: React.FC = () => {
                   className={`w-full rounded-xl sm:rounded-2xl p-3 sm:p-4 backdrop-blur-sm border shadow-lg ${
                     message.role === "user"
                       ? "bg-gradient-to-br from-violet-500/20 to-purple-600/20 dark:from-violet-600/30 dark:to-purple-700/30 border-violet-300/30 dark:border-violet-400/30 text-gray-800 dark:text-gray-100"
-                      : "bg-gradient-to-br from-white/40 to-white/30 dark:from-gray-800/60 dark:to-gray-700/60 border-white/40 dark:border-white/20 text-gray-800 dark:text-gray-100"
+                      : "dark:bg-black border-white/40 dark:border-white/20 text-gray-800 dark:text-gray-100"
                   }`}
                 >
                   <div className="flex items-center justify-between mb-2 sm:mb-3">
@@ -512,7 +512,7 @@ const Chatbot: React.FC = () => {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Type your message here..."
-              className="w-full resize-none rounded-xl sm:rounded-2xl px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-white/60 to-white/50 dark:from-gray-700/60 dark:to-gray-600/60 text-gray-800 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-400/50 border border-white/50 dark:border-white/30 backdrop-blur-sm shadow-lg transition-all duration-300 focus:shadow-xl"
+              className="w-full resize-none rounded-xl sm:rounded-2xl px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-white/60 to-white/50 dark:from-gray-700/60 dark:to-gray-600/60 text-gray-800 dark:text-gray-800 placeholder-gray-500 dark:placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-violet-400/50 border border-white/50 dark:border-white/30 backdrop-blur-sm shadow-lg transition-all duration-300 focus:shadow-xl"
               rows={1}
               style={{ minHeight: "48px", maxHeight: "120px" }}
               onKeyDown={(e) => {
@@ -553,7 +553,7 @@ const Chatbot: React.FC = () => {
         </div>
 
         {/* Footer info */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-2 sm:mt-3 px-1 sm:px-2 gap-2 sm:gap-0">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-2 sm:mt-5 px-1 sm:px-2 gap-2 sm:gap-0">
           <p className="text-xs text-gray-500 dark:text-gray-400">
             Press{" "}
             <kbd className="px-1.5 py-0.5 sm:px-2 sm:py-1 bg-white/30 dark:bg-gray-700/50 rounded text-xs">
