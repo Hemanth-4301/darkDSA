@@ -28,9 +28,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               {children}
             </main>
 
-            <div className="pb-10 p-1 lg:p-10">
-              <Chatbot />
-            </div>
+            {location.pathname !== "/todo" && (
+              <div className="pb-10 p-1 lg:p-10">
+                <Chatbot />
+              </div>
+            )}
 
             <footer className="py-6 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
               <div className="container mx-auto px-4 text-center text-gray-600 dark:text-gray-400 text-sm">
