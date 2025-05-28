@@ -19,7 +19,7 @@ const Hero: React.FC = () => {
             <div className="flex-1">
               <div className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary-100 dark:bg-primary-900/30 text-primary-800 dark:text-primary-200 mb-6 animate-bounce-slow">
                 <Sparkles className="h-4 w-4 mr-2" />
-                Master DSA with 140+ Problems
+                Master DSA with 110+ Problems
               </div>
               <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-6 bg-gradient-to-r from-primary-600 to-secondary-600 dark:from-primary-400 dark:to-secondary-400 text-transparent bg-clip-text animate-gradient">
                 Level Up Your Coding Skills

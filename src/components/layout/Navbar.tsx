@@ -48,7 +48,7 @@ const Navbar: React.FC = () => {
             <div className="text-sm font-medium">
               <span className="text-slate-200">Progress: </span>
               <span className="text-indigo-400">{totalSolved}</span>
-              <span className="text-slate-200">/150</span>
+              <span className="text-slate-200">/117</span>
             </div>
 
             <nav className="flex space-x-4">
