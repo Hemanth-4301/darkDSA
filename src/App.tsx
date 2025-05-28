@@ -6,6 +6,7 @@ import CategoryPage from "./pages/CategoryPage";
 import QuestionPage from "./pages/QuestionPage";
 import Chatbot from "./components/layout/Chatbot";
 import JavaCompiler from "./components/layout/Compiler";
+import Todo from "./components/layout/Todo";
 function App() {
   return (
     <Router>
@@ -18,8 +19,7 @@ function App() {
             element={<QuestionPage />}
           />
           <Route path="/compiler" element={<JavaCompiler />} />
-          <Route path="/chatbot" element={<Chatbot />} />
-
+          <Route path="/todo" element={<Todo />} />
         </Routes>
       </Layout>
     </Router>
